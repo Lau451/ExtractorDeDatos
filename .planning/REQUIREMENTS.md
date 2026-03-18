@@ -97,6 +97,9 @@
 | ING-04 | Phase 1 | Pending |
 | ING-05 | Phase 1 | Pending |
 | ING-06 | Phase 1 | Pending |
+| API-01 | Phase 1 | Pending |
+| API-02 | Phase 1 | Pending |
+| API-05 | Phase 1 | Pending |
 | CLS-01 | Phase 2 | Pending |
 | CLS-02 | Phase 2 | Pending |
 | CLS-03 | Phase 2 | Pending |
@@ -114,22 +117,21 @@
 | EXP-02 | Phase 3 | Pending |
 | EXP-03 | Phase 3 | Pending |
 | EXP-04 | Phase 3 | Pending |
-| API-01 | Phase 4 | Pending |
-| API-02 | Phase 4 | Pending |
+| API-04 | Phase 3 | Pending |
 | API-03 | Phase 4 | Pending |
-| API-04 | Phase 4 | Pending |
-| API-05 | Phase 4 | Pending |
+| REV-05 | Phase 4 | Pending |
 | REV-01 | Phase 5 | Pending |
 | REV-02 | Phase 5 | Pending |
 | REV-03 | Phase 5 | Pending |
 | REV-04 | Phase 5 | Pending |
-| REV-05 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 34 total
-- Mapped to phases: 34
+- v1 requirements: 33 total
+- Mapped to phases: 33
 - Unmapped: 0 ✓
+
+Note: Original file stated 34 requirements — actual count is 33 (ING: 6, CLS: 3, EXT: 10, REV: 5, EXP: 4, API: 5).
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 — traceability updated to reflect roadmap phase assignments*
