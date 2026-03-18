@@ -1,0 +1,279 @@
+# Codebase Structure
+
+**Analysis Date:** 2026-03-18
+
+## Directory Layout
+
+```
+ExtraccionDeDatosNE2.0/
+├── src/                          # Application source code (created in Phase 1)
+│   ├── main.py                   # Application entry point; FastAPI app initialization
+│   ├── config.py                 # Environment configuration and settings
+│   │
+│   ├── ingestion/                # Phase 1: File ingestion and text extraction
+│   │   ├── __init__.py
+│   │   ├── router.py             # File type router/dispatcher
+│   │   ├── handlers/
+│   │   │   ├── __init__.py
+│   │   │   ├── pdf_handler.py    # Text extraction (direct text + OCR for scanned)
+│   │   │   ├── excel_handler.py  # Cell value extraction
+│   │   │   └── image_handler.py  # OCR for standalone images (PNG, TIFF)
+│   │   └── models.py             # RawTextDocument, FileMetadata dataclasses
+│   │
+│   ├── extraction/               # Phase 2: LLM-based field extraction
+│   │   ├── __init__.py
+│   │   ├── extractor.py          # Main extraction orchestrator
+│   │   ├── schema.py             # Pydantic models: ExtractionResult, LineItem, SupplierEntry
+│   │   ├── prompts.py            # LLM system and user prompts for field extraction
+│   │   ├── providers/            # Pluggable LLM provider adapters
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # Abstract LLMProvider base class
+│   │   │   ├── openai_provider.py
+│   │   │   ├── claude_provider.py
+│   │   │   └── gemini_provider.py
+│   │   └── confidence.py          # Confidence score calculation logic
+│   │
+│   ├── comparison/               # Phase 3: Supplier comparison logic
+│   │   ├── __init__.py
+│   │   ├── comparator.py         # Supplier comparison synthesis
+│   │   ├── models.py             # ComparisonResult, SupplierComparison dataclasses
+│   │   └── pricing_logic.py      # Best-price flagging and supplier ranking
+│   │
+│   ├── export/                   # Phase 3: CSV export formatters
+│   │   ├── __init__.py
+│   │   ├── exporter.py           # Main export orchestrator
+│   │   ├── formatters/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # Abstract formatter base class
+│   │   │   ├── summary.py        # Summary CSV: one row per document
+│   │   │   ├── line_items.py     # Line items CSV: one row per extracted line
+│   │   │   └── comparison.py     # Comparison CSV: suppliers vs line items
+│   │   └── models.py             # CSVExportFormat enum
+│   │
+│   ├── api/                      # Phase 4: FastAPI service and endpoints
+│   │   ├── __init__.py
+│   │   ├── app.py                # FastAPI app factory function
+│   │   ├── jobs/
+│   │   │   ├── __init__.py
+│   │   │   ├── queue.py          # Job queue and state management (in-memory dict or Celery)
+│   │   │   ├── models.py         # Job, JobStatus dataclasses
+│   │   │   └── worker.py         # Background worker task; orchestrates 1→2→3→export
+│   │   └── endpoints/
+│   │       ├── __init__.py
+│   │       ├── extract.py        # POST /extract endpoint
+│   │       ├── health.py         # GET /health endpoint
+│   │       └── export.py         # GET /export/{job_id}?format=summary|line_items|comparison
+│   │
+│   └── utils/                    # Shared utilities
+│       ├── __init__.py
+│       ├── logging.py            # Structured logging setup
+│       ├── errors.py             # Custom exception classes
+│       └── validators.py         # File type and field validators
+│
+├── tests/                        # Test suite (created alongside implementation)
+│   ├── __init__.py
+│   ├── conftest.py               # Pytest fixtures (sample files, mock LLMs, mock jobs)
+│   │
+│   ├── unit/                     # Unit tests (no external dependencies)
+│   │   ├── test_pdf_handler.py
+│   │   ├── test_excel_handler.py
+│   │   ├── test_extraction_schema.py
+│   │   ├── test_extractor.py
+│   │   ├── test_comparison_logic.py
+│   │   └── test_csv_formatters.py
+│   │
+│   ├── integration/              # Integration tests (with real OCR, mocked LLMs)
+│   │   ├── test_ingestion_pipeline.py
+│   │   ├── test_extraction_pipeline.py
+│   │   ├── test_export_pipeline.py
+│   │   └── test_full_pipeline.py
+│   │
+│   └── fixtures/                 # Test data files
+│       ├── sample.pdf
+│       ├── sample_scanned.pdf
+│       ├── sample.xlsx
+│       ├── sample.png
+│       └── expected_output.csv
+│
+├── .env.example                  # Example environment variables (LLM_PROVIDER, API_KEY, etc.)
+├── requirements.txt              # Python dependencies
+├── pyproject.toml                # Poetry project config (if using Poetry)
+├── pytest.ini                    # Pytest configuration
+├── .gitignore                    # Ignore .env, __pycache__, .pytest_cache
+├── README.md                     # Project overview and quick start
+│
+└── .planning/                    # Project planning and documentation
+    ├── codebase/                 # Codebase analysis (generated by GSD)
+    │   ├── ARCHITECTURE.md       # Architecture analysis
+    │   ├── STRUCTURE.md          # This file
+    │   ├── CONVENTIONS.md        # Coding conventions (created in quality phase)
+    │   └── TESTING.md            # Testing patterns (created in quality phase)
+    ├── REQUIREMENTS.md           # v1 and v2 feature requirements
+    ├── ROADMAP.md                # 4-phase implementation roadmap
+    ├── STATE.md                  # Current project state and progress
+    └── config.json               # GSD configuration
+```
+
+## Directory Purposes
+
+**`src/`:**
+- Purpose: All production application code
+- Contains: Implementation of Phases 1-4 (ingestion, extraction, comparison, API)
+- Structure: Organized by layer (ingestion, extraction, comparison, export, api) with supporting utils
+
+**`src/ingestion/`:**
+- Purpose: Phase 1 implementation; converts any file format to normalized raw text
+- Contains: File router, handler implementations (PDF, Excel, image), raw text models
+- Key files: `router.py` (dispatcher), `handlers/*.py` (format-specific extraction)
+
+**`src/extraction/`:**
+- Purpose: Phase 2 implementation; interprets text and extracts structured business fields
+- Contains: LLM provider adapters, extraction schema, prompt templates, confidence scoring
+- Key files: `schema.py` (Pydantic models), `providers/base.py` (LLM abstraction), `extractor.py` (orchestrator)
+
+**`src/comparison/`:**
+- Purpose: Phase 3 implementation; synthesizes supplier comparisons from multiple extractions
+- Contains: Comparison logic, supplier ranking, pricing analysis
+- Key files: `comparator.py` (comparison synthesis), `pricing_logic.py` (best-price calculation)
+
+**`src/export/`:**
+- Purpose: Phase 3 implementation; generates three CSV output formats
+- Contains: CSV formatters (summary, line items, comparison)
+- Key files: `formatters/*.py` (format-specific implementations), `exporter.py` (orchestrator)
+
+**`src/api/`:**
+- Purpose: Phase 4 implementation; FastAPI service with endpoints and async job processing
+- Contains: FastAPI app, endpoints, job queue, background worker
+- Key files: `app.py` (app factory), `endpoints/*.py` (HTTP handlers), `jobs/worker.py` (extraction worker)
+
+**`src/utils/`:**
+- Purpose: Shared utilities used across layers
+- Contains: Logging setup, custom exceptions, validators, helpers
+- Key files: `errors.py` (exception hierarchy), `logging.py` (structured logging), `validators.py` (input validation)
+
+**`tests/`:**
+- Purpose: Comprehensive test suite organized by test type
+- Contains: Unit tests (isolated), integration tests (multi-layer), test fixtures
+- Key files: `conftest.py` (pytest fixtures), `unit/*.py` (unit test cases), `integration/*.py` (end-to-end)
+
+**`.planning/codebase/`:**
+- Purpose: Generated codebase analysis documents (created by GSD commands)
+- Contains: ARCHITECTURE.md, STRUCTURE.md, CONVENTIONS.md, TESTING.md
+- Not committed to src repo; used as reference for future implementation phases
+
+## Key File Locations
+
+**Entry Points:**
+- `src/main.py`: Main application entry; FastAPI app initialization
+- `src/api/app.py`: FastAPI app factory; returns configured app instance
+- Command: `uvicorn src.main:app --reload` (development) or `uvicorn src.main:app` (production)
+
+**Configuration:**
+- `src/config.py`: Settings loaded from environment (LLM_PROVIDER, API_KEYS, TEMP_DIR, etc.)
+- `.env.example`: Template for required environment variables
+- `.planning/config.json`: GSD workflow configuration
+
+**Core Logic:**
+- `src/ingestion/router.py`: File type dispatcher; entry point for Phase 1
+- `src/extraction/extractor.py`: Field extraction orchestrator; entry point for Phase 2
+- `src/comparison/comparator.py`: Comparison synthesis; entry point for Phase 3
+- `src/api/jobs/worker.py`: Background task orchestrator; chains all layers together
+
+**API Endpoints:**
+- `src/api/endpoints/extract.py`: POST /extract (file upload, job creation)
+- `src/api/endpoints/health.py`: GET /health (readiness check)
+- `src/api/endpoints/export.py`: GET /export/{job_id} (CSV download)
+
+**Testing:**
+- `tests/conftest.py`: Pytest fixtures (mock files, mock LLMs, job queue stubs)
+- `tests/unit/`: Unit tests for individual components (no external calls)
+- `tests/integration/`: Multi-layer tests (real ingestion, mocked LLM, full pipeline)
+
+## Naming Conventions
+
+**Files:**
+- `snake_case.py` for all Python source files
+- `test_*.py` for test files (pytest discovery)
+- `*_handler.py` for file type handlers (pdf_handler.py, excel_handler.py)
+- `*_provider.py` for LLM provider implementations (openai_provider.py, claude_provider.py)
+- `*_formatter.py` for CSV format handlers (summary_formatter.py, line_items_formatter.py)
+
+**Directories:**
+- `snake_case/` for all directories
+- Layer directories match phases: `ingestion/`, `extraction/`, `comparison/`, `export/`, `api/`
+- Grouping subdirs use functional names: `handlers/`, `providers/`, `formatters/`, `endpoints/`
+
+**Python Classes:**
+- `PascalCase` for all class names
+- Handlers: `PDFHandler`, `ExcelHandler`, `ImageHandler`
+- Models: `ExtractionResult`, `LineItem`, `SupplierEntry`, `RawTextDocument`
+- Providers: `OpenAIProvider`, `ClaudeProvider`, `GeminiProvider`
+- Exceptions: `IngestionError`, `ExtractionError`, `ComparisonError`, `ExportError`
+
+**Python Functions:**
+- `snake_case` for all function and method names
+- Handlers: `extract_text()`, `read_cells()`, `apply_ocr()`
+- Providers: `extract_fields()`, `validate_response()`, `calculate_confidence()`
+- Endpoints: `extract_files()`, `get_health()`, `export_results()`
+
+**Variables and Constants:**
+- `snake_case` for instance/local variables
+- `SCREAMING_SNAKE_CASE` for module-level constants (MAX_FILE_SIZE, DEFAULT_TIMEOUT)
+- Type hints on all function parameters and returns
+
+## Where to Add New Code
+
+**New Feature (e.g., support for DOCX documents):**
+- Primary code: `src/ingestion/handlers/docx_handler.py` (implement DocxHandler following pattern from PDFHandler)
+- Router update: Add `.docx` → DocxHandler mapping in `src/ingestion/router.py`
+- Tests: `tests/unit/test_docx_handler.py` (test OCR extraction) + `tests/integration/test_ingestion_pipeline.py` (add DOCX test case)
+
+**New LLM Provider (e.g., Anthropic's Claude):**
+- Implementation: `src/extraction/providers/claude_provider.py` (inherit from `base.py` LLMProvider)
+- Configuration: Add `CLAUDE_API_KEY` to `.env.example`
+- Tests: `tests/unit/test_claude_provider.py` (mock API calls) + `tests/integration/test_extraction_pipeline.py` (test with real extraction)
+
+**New CSV Format (e.g., audit trail CSV):**
+- Formatter: `src/export/formatters/audit_trail.py` (inherit from base Formatter)
+- Exporter update: Register new formatter in `src/export/exporter.py` format registry
+- Tests: `tests/unit/test_csv_formatters.py` (add audit trail test case)
+
+**New API Endpoint (e.g., GET /status without job_id):**
+- Implementation: `src/api/endpoints/status.py` (create new endpoint handler)
+- App registration: Import and register in `src/api/app.py` router setup
+- Tests: `tests/integration/test_api_endpoints.py` (add status endpoint tests)
+
+**Utility/Helper:**
+- Shared helpers: `src/utils/helpers.py` (general-purpose utilities)
+- Format-specific: `src/ingestion/utils.py` (ingestion helpers), `src/extraction/utils.py` (extraction helpers)
+
+## Special Directories
+
+**`src/extraction/providers/`:**
+- Purpose: Pluggable LLM provider implementations
+- Generated: No
+- Committed: Yes
+- Pattern: Each provider file imports from `.base` and implements abstract `extract_fields()` method
+- Add new provider: Create `new_provider.py`, inherit from `LLMProvider`, register in `src/config.py` provider map
+
+**`tests/fixtures/`:**
+- Purpose: Test data files (sample PDFs, Excel sheets, expected outputs)
+- Generated: No (manually created for test cases)
+- Committed: Yes (tracked in git, .gitignore excludes large files)
+- Scope: Small, representative files for unit and integration tests
+
+**`.env` and `.env.example`:**
+- Purpose: Environment variables and secrets management
+- Generated: `.env` is generated at runtime by user; `.env.example` is committed
+- Committed: `.env.example` YES, `.env` NO (added to .gitignore)
+- Contains: LLM_PROVIDER, API_KEYS (OpenAI, Claude, Gemini), TEMP_DIR, LOG_LEVEL
+
+**`src/api/jobs/` (job queue directory):**
+- Purpose: In-memory job management and background worker orchestration
+- Generated: No
+- Committed: Yes
+- Note: Job results stored in memory; transition to persistent storage (Redis, Celery broker) in v2
+
+---
+
+*Structure analysis: 2026-03-18*
