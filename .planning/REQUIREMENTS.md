@@ -85,24 +85,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INGEST-02 | Phase 1 | Pending |
 | INGEST-03 | Phase 1 | Pending |
 | INGEST-04 | Phase 1 | Pending |
-| OCR-01 | Phase 2 | Pending |
-| OCR-02 | Phase 2 | Pending |
-| OCR-03 | Phase 2 | Pending |
-| OCR-04 | Phase 2 | Pending |
-| LLM-01 | Phase 3 | Pending |
-| LLM-02 | Phase 3 | Pending |
-| LLM-03 | Phase 3 | Pending |
-| LLM-04 | Phase 3 | Pending |
-| COMP-01 | Phase 4 | Pending |
-| COMP-02 | Phase 4 | Pending |
-| COMP-03 | Phase 4 | Pending |
-| CSV-01 | Phase 4 | Pending |
-| CSV-02 | Phase 4 | Pending |
-| CSV-03 | Phase 4 | Pending |
-| API-01 | Phase 5 | Pending |
-| API-02 | Phase 5 | Pending |
-| API-03 | Phase 5 | Pending |
-| API-04 | Phase 5 | Pending |
+| OCR-01 | Phase 1 | Pending |
+| OCR-02 | Phase 1 | Pending |
+| OCR-03 | Phase 1 | Pending |
+| OCR-04 | Phase 1 | Pending |
+| LLM-01 | Phase 2 | Pending |
+| LLM-02 | Phase 2 | Pending |
+| LLM-03 | Phase 2 | Pending |
+| LLM-04 | Phase 2 | Pending |
+| COMP-01 | Phase 3 | Pending |
+| COMP-02 | Phase 3 | Pending |
+| COMP-03 | Phase 3 | Pending |
+| CSV-01 | Phase 3 | Pending |
+| CSV-02 | Phase 3 | Pending |
+| CSV-03 | Phase 3 | Pending |
+| API-01 | Phase 4 | Pending |
+| API-02 | Phase 4 | Pending |
+| API-03 | Phase 4 | Pending |
+| API-04 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 22 total
@@ -111,4 +111,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-17*
-*Last updated: 2026-03-17 after initial definition*
+*Last updated: 2026-03-17 after roadmap creation (consolidated to 4 phases)*
