@@ -1,5 +1,5 @@
 ---
-status: diagnosed
+status: resolved
 phase: 01-foundation
 source: [01-01-SUMMARY.md, 01-02-SUMMARY.md]
 started: 2026-03-19T00:00:00Z
@@ -59,7 +59,7 @@ skipped: 0
 ## Gaps
 
 - truth: "Subir un .png con texto visible produce raw_text con todo el texto extraído por OCR"
-  status: failed
+  status: resolved
   reason: "User reported: salio incompleto, le faltaron datos"
   severity: major
   test: 7
@@ -72,7 +72,7 @@ skipped: 0
   debug_session: ".planning/debug/png-ocr-incomplete-text.md"
 
 - truth: "Subir un .html produce raw_text con el contenido del documento en formato markdown"
-  status: failed
+  status: resolved
   reason: "User reported: error_code docling_parse_error, error_message: Pipeline SimplePipeline failed"
   severity: major
   test: 8
