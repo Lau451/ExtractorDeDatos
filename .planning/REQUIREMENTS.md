@@ -54,7 +54,7 @@
 - [ ] **API-02**: API exposes a GET /jobs/{id} endpoint that returns the current job status (pending / processing / complete / error)
 - [ ] **API-03**: API exposes a PATCH /jobs/{id}/fields endpoint that accepts user-corrected field values
 - [ ] **API-04**: API exposes a GET /jobs/{id}/export endpoint that returns the final CSV file (applying any user corrections)
-- [ ] **API-05**: API exposes a GET /health endpoint that returns service health status
+- [x] **API-05**: API exposes a GET /health endpoint that returns service health status
 
 ## v2 Requirements
 
@@ -99,7 +99,7 @@
 | ING-06 | Phase 1 | Pending |
 | API-01 | Phase 1 | Pending |
 | API-02 | Phase 1 | Pending |
-| API-05 | Phase 1 | Pending |
+| API-05 | Phase 1 | Complete |
 | CLS-01 | Phase 2 | Pending |
 | CLS-02 | Phase 2 | Pending |
 | CLS-03 | Phase 2 | Pending |
