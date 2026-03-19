@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 01-foundation
 source: [01-01-SUMMARY.md, 01-02-SUMMARY.md]
 started: 2026-03-19T00:00:00Z
@@ -63,17 +63,24 @@ skipped: 0
   reason: "User reported: salio incompleto, le faltaron datos"
   severity: major
   test: 7
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "IMAGE branch en docling_adapter.py no pasa ImageFormatOption — usa defaults con force_full_page_ocr=False y bitmap_area_threshold=0.05, omitiendo regiones pequeñas. Fix: agregar ImageFormatOption con PdfPipelineOptions(do_ocr=True, force_full_page_ocr=True)"
+  artifacts:
+    - path: "src/ingestion/docling_adapter.py"
+      issue: "IMAGE branch retorna DocumentConverter sin format_options — no configura OCR para imágenes"
+  missing:
+    - "ImageFormatOption con force_full_page_ocr=True en el branch de IMAGE"
+  debug_session: ".planning/debug/png-ocr-incomplete-text.md"
 
 - truth: "Subir un .html produce raw_text con el contenido del documento en formato markdown"
   status: failed
   reason: "User reported: error_code docling_parse_error, error_message: Pipeline SimplePipeline failed"
   severity: major
   test: 8
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "service.py usa str(exc) en el except, descartando exc.__cause__ con el error real de Docling. El 'Pipeline SimplePipeline failed' es solo el wrapper — el error real está en exc.__cause__. Además, el HTML subido puede tener estructura que Docling no puede parsear (requiere diagnóstico con HTML real)"
+  artifacts:
+    - path: "src/ingestion/service.py"
+      issue: "except Exception as exc: usa str(exc) en vez de str(exc.__cause__ or exc) — oculta el error real"
+  missing:
+    - "Mejorar error message en service.py para exponer exc.__cause__"
+    - "Verificar que el HTML subido sea válido y compatible con Docling"
+  debug_session: ".planning/debug/html-simplpipeline-failure.md"
