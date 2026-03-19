@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from io import BytesIO
 
 from docling.datamodel.base_models import DocumentStream
@@ -6,6 +7,8 @@ from docling.datamodel.base_models import DocumentStream
 from src.core.config import settings
 from src.core.job_store import job_store
 from src.ingestion.docling_adapter import build_converter
+
+logger = logging.getLogger(__name__)
 
 
 async def process_document(job_id: str, data: bytes, filename: str) -> None:
@@ -33,7 +36,9 @@ async def process_document(job_id: str, data: bytes, filename: str) -> None:
             "Document processing exceeded 60s timeout",
         )
     except Exception as exc:
-        await job_store.set_error(job_id, "docling_parse_error", str(exc))
+        logger.exception("Docling conversion failed for job %s (file: %s)", job_id, filename)
+        detail = str(exc.__cause__) if exc.__cause__ else str(exc)
+        await job_store.set_error(job_id, "docling_parse_error", detail)
 
 
 def _sync_convert(source: DocumentStream, filename: str):
