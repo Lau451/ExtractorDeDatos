@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-foundation-02-PLAN.md
-last_updated: "2026-03-19T01:36:05.248Z"
+stopped_at: Completed 01-foundation-03-PLAN.md
+last_updated: "2026-03-19T04:47:50Z"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 3
+  completed_plans: 3
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 01 (foundation) — EXECUTING
-Plan: 2 of 2
+Phase: 01 (foundation) — COMPLETE
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 2 of 2
 
 *Updated after each plan completion*
 | Phase 01-foundation P02 | 5 min | 2 tasks | 17 files |
+| Phase 01-foundation P03 | 3 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: GET /jobs/{id} always returns HTTP 200 for all job states including error — error details in JSON body (async polling contract)
 - [Phase 01-foundation]: scanned.pdf fixture uses raw-RGB image XObject in PDF (no reportlab available) — forces Docling OCR path with zero text objects in content stream
 - [Phase 01-foundation]: easyocr added as runtime dependency — required by Docling PDF pipeline when do_ocr=True, was missing from environment
+- [Phase 01-foundation]: force_full_page_ocr=True for images (no embedded text layer) vs False for PDF (may have selectable text)
+- [Phase 01-foundation]: exc.__cause__ unwrapping surfaces real Docling pipeline error instead of opaque wrapper; logging.exception() auto-includes full traceback
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T01:31:39.554Z
-Stopped at: Completed 01-foundation-02-PLAN.md
+Last session: 2026-03-19T04:47:50Z
+Stopped at: Completed 01-foundation-03-PLAN.md
 Resume file: None

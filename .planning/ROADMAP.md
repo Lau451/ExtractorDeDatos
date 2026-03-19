@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Scanned PDFs and image files produce non-empty normalized text (OCR is active, not silently skipped)
   4. Uploading an unsupported file type returns a clear error — the job is never created
   5. GET /health returns a healthy status response
-**Plans:** 3 plans (2 complete + 1 gap closure)
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold, dependencies, core infrastructure (config, job store, API models, health endpoint)
@@ -87,7 +87,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | Gap closure | 2026-03-19 |
+| 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 0/TBD | Not started | - |
 | 3. CSV Export | 0/TBD | Not started | - |
 | 4. Full API Integration | 0/TBD | Not started | - |
