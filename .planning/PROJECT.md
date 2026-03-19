@@ -12,7 +12,14 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ### Validated
 
-(None yet — ship to validate)
+**File Ingestion** *(Validated in Phase 1: Foundation)*
+- [x] User can upload documents in PDF, Excel (XLSX/XLS), image (PNG/JPG), and HTML formats
+- [x] System parses and normalizes document content using Docling
+- [x] System falls back to OCR for scanned PDFs and images
+
+**API** *(Validated in Phase 1: Foundation)*
+- [x] REST API exposes upload (`POST /extract`) and status polling (`GET /jobs/{id}`) endpoints
+- [x] `GET /health` returns service health status
 
 ### Active
 
@@ -63,7 +70,8 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Codebase:** Pre-implementation (greenfield). Planning documents exist in `.planning/codebase/` from architectural analysis.
+- **Current State:** Phase 1 complete — FastAPI server running, Docling ingestion active, 15/15 tests passing. Phase 2 (extraction pipeline) is next.
+- **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
 - **CSV Schemas:** Tenders/RFQs and Quotations schemas are already defined. Purchase Orders, Invoices, and Supplier Comparison schemas need to be designed as part of this project.
@@ -82,12 +90,12 @@ A procurement analyst can upload any business document and get a structured, edi
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Docling for document parsing | Structure-aware parsing; handles PDFs, Excel, images better than raw pdfplumber+Tesseract | — Pending |
+| Docling for document parsing | Structure-aware parsing; handles PDFs, Excel, images better than raw pdfplumber+Tesseract | ✓ Implemented (Phase 1) |
 | Gemini 2.5 Flash as primary LLM | User requirement; good cost/performance ratio for structured extraction tasks | — Pending |
 | Pluggable LLM provider abstraction | Allow swapping Gemini for OpenAI/Claude without rewriting extractors | — Pending |
 | Web UI with inline editing | Users need to review and correct extracted fields before downloading | — Pending |
-| In-memory job state for v1 | Avoids database dependency; acceptable for single-user internal tool | — Pending |
+| In-memory job state for v1 | Avoids database dependency; acceptable for single-user internal tool | ✓ Implemented (Phase 1) |
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-18 after initialization*
+*Last updated: 2026-03-19 — Phase 1 complete*
