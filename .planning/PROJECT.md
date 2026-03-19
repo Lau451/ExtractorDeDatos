@@ -23,11 +23,6 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ### Active
 
-**File Ingestion**
-- [ ] User can upload documents in PDF, Excel (XLSX/XLS), image (PNG/JPG), and HTML formats
-- [ ] System parses and normalizes document content using Docling
-- [ ] System falls back to OCR for scanned PDFs and images
-
 **Document Classification**
 - [ ] System automatically detects document type on upload (purchase order, tender/RFQ, quotation, invoice, supplier comparison)
 - [ ] User can override the detected document type before extraction
@@ -70,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 1 complete — FastAPI server running, Docling ingestion active, 15/15 tests passing. Phase 2 (extraction pipeline) is next.
+- **Current State:** Phase 1 complete (all 3 plans, including gap closure) — FastAPI server running, Docling ingestion active for PDF/Excel/PNG/HTML with full-page OCR, real error surfacing, 15/15 tests passing. Phase 2 (extraction pipeline) is next.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -98,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-19 — Phase 1 complete*
+*Last updated: 2026-03-19 — Phase 1 complete (gap closure included)*
