@@ -30,7 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Scanned PDFs and image files produce non-empty normalized text (OCR is active, not silently skipped)
   4. Uploading an unsupported file type returns a clear error — the job is never created
   5. GET /health returns a healthy status response
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Project scaffold, dependencies, core infrastructure (config, job store, API models, health endpoint)
+- [ ] 01-02-PLAN.md — Ingestion layer (Docling adapter, service), API endpoints (POST /extract, GET /jobs), full test suite
 
 ### Phase 2: Extraction Pipeline
 **Goal**: Full extraction pipeline — document classifier routing to per-type Pydantic schemas, Gemini 2.5 Flash structured extraction for all five document types including line items, and pluggable LLM provider abstraction
@@ -82,7 +86,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 0/2 | Planning complete | - |
 | 2. Extraction Pipeline | 0/TBD | Not started | - |
 | 3. CSV Export | 0/TBD | Not started | - |
 | 4. Full API Integration | 0/TBD | Not started | - |
