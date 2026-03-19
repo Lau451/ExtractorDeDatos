@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from docling.document_converter import DocumentConverter, InputFormat, PdfFormatOption
+from docling.document_converter import DocumentConverter, InputFormat, PdfFormatOption, ImageFormatOption
 from docling.datamodel.pipeline_options import EasyOcrOptions, PdfPipelineOptions
 
 
@@ -22,7 +22,14 @@ def build_converter(filename: str) -> DocumentConverter:
         return DocumentConverter(allowed_formats=[InputFormat.XLSX])
 
     elif suffix in {".png", ".jpg", ".jpeg"}:
-        return DocumentConverter(allowed_formats=[InputFormat.IMAGE])
+        img_opts = PdfPipelineOptions()
+        img_opts.do_ocr = True
+        img_opts.do_table_structure = True
+        img_opts.ocr_options = EasyOcrOptions(lang=["en"], force_full_page_ocr=True)
+        img_opts.document_timeout = 60
+        return DocumentConverter(
+            format_options={InputFormat.IMAGE: ImageFormatOption(pipeline_options=img_opts)}
+        )
 
     elif suffix in {".html", ".htm"}:
         return DocumentConverter(allowed_formats=[InputFormat.HTML])
