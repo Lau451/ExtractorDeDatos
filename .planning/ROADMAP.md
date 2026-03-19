@@ -12,7 +12,7 @@ DocExtract is built in five natural delivery phases, each completing a coherent 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Running FastAPI server with safe multi-format file ingestion and async job infrastructure
+- [x] **Phase 1: Foundation** - Running FastAPI server with safe multi-format file ingestion and async job infrastructure (completed 2026-03-19)
 - [ ] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
 - [ ] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types
 - [ ] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export
@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Scanned PDFs and image files produce non-empty normalized text (OCR is active, not silently skipped)
   4. Uploading an unsupported file type returns a clear error — the job is never created
   5. GET /health returns a healthy status response
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Project scaffold, dependencies, core infrastructure (config, job store, API models, health endpoint)
@@ -86,7 +86,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 1/2 | In Progress|  |
+| 1. Foundation | 2/2 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 0/TBD | Not started | - |
 | 3. CSV Export | 0/TBD | Not started | - |
 | 4. Full API Integration | 0/TBD | Not started | - |

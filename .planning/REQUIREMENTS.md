@@ -7,12 +7,12 @@
 
 ### File Ingestion
 
-- [ ] **ING-01**: User can upload a PDF file (text-based) and the system extracts its content
-- [ ] **ING-02**: User can upload a scanned PDF or image-based PDF and the system extracts text via full-page OCR
-- [ ] **ING-03**: User can upload an Excel file (XLSX/XLS) and the system reads its cell content
-- [ ] **ING-04**: User can upload an image file (PNG/JPG) and the system extracts text via OCR
-- [ ] **ING-05**: User can upload an HTML file and the system parses its content
-- [ ] **ING-06**: System rejects unsupported file types with a clear error message before processing
+- [x] **ING-01**: User can upload a PDF file (text-based) and the system extracts its content
+- [x] **ING-02**: User can upload a scanned PDF or image-based PDF and the system extracts text via full-page OCR
+- [x] **ING-03**: User can upload an Excel file (XLSX/XLS) and the system reads its cell content
+- [x] **ING-04**: User can upload an image file (PNG/JPG) and the system extracts text via OCR
+- [x] **ING-05**: User can upload an HTML file and the system parses its content
+- [x] **ING-06**: System rejects unsupported file types with a clear error message before processing
 
 ### Document Classification
 
@@ -50,8 +50,8 @@
 
 ### REST API
 
-- [ ] **API-01**: API exposes a POST /extract endpoint that accepts a file upload and returns a job ID immediately
-- [ ] **API-02**: API exposes a GET /jobs/{id} endpoint that returns the current job status (pending / processing / complete / error)
+- [x] **API-01**: API exposes a POST /extract endpoint that accepts a file upload and returns a job ID immediately
+- [x] **API-02**: API exposes a GET /jobs/{id} endpoint that returns the current job status (pending / processing / complete / error)
 - [ ] **API-03**: API exposes a PATCH /jobs/{id}/fields endpoint that accepts user-corrected field values
 - [ ] **API-04**: API exposes a GET /jobs/{id}/export endpoint that returns the final CSV file (applying any user corrections)
 - [x] **API-05**: API exposes a GET /health endpoint that returns service health status
@@ -91,14 +91,14 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ING-01 | Phase 1 | Pending |
-| ING-02 | Phase 1 | Pending |
-| ING-03 | Phase 1 | Pending |
-| ING-04 | Phase 1 | Pending |
-| ING-05 | Phase 1 | Pending |
-| ING-06 | Phase 1 | Pending |
-| API-01 | Phase 1 | Pending |
-| API-02 | Phase 1 | Pending |
+| ING-01 | Phase 1 | Complete |
+| ING-02 | Phase 1 | Complete |
+| ING-03 | Phase 1 | Complete |
+| ING-04 | Phase 1 | Complete |
+| ING-05 | Phase 1 | Complete |
+| ING-06 | Phase 1 | Complete |
+| API-01 | Phase 1 | Complete |
+| API-02 | Phase 1 | Complete |
 | API-05 | Phase 1 | Complete |
 | CLS-01 | Phase 2 | Pending |
 | CLS-02 | Phase 2 | Pending |

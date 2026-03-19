@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-foundation-01-PLAN.md
-last_updated: "2026-03-19T01:23:12.697Z"
+stopped_at: Completed 01-foundation-02-PLAN.md
+last_updated: "2026-03-19T01:31:39.556Z"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -46,6 +46,7 @@ Plan: 2 of 2
 - Trend: Baseline established
 
 *Updated after each plan completion*
+| Phase 01-foundation P02 | 5 min | 2 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Module-level job_store singleton avoids DI complexity in v1 single-process deployment
 - [Phase 01-foundation]: asyncio.Lock as single coarse-grained lock for in-memory dict - correct for asyncio single event loop
 - [Phase 01-foundation]: JobResultPayload as nested model in JobResponse for Phase 2 extensibility
+- [Phase 01-foundation]: GET /jobs/{id} always returns HTTP 200 for all job states including error — error details in JSON body (async polling contract)
+- [Phase 01-foundation]: scanned.pdf fixture uses raw-RGB image XObject in PDF (no reportlab available) — forces Docling OCR path with zero text objects in content stream
+- [Phase 01-foundation]: easyocr added as runtime dependency — required by Docling PDF pipeline when do_ocr=True, was missing from environment
 
 ### Pending Todos
 
@@ -74,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T01:23:12.695Z
-Stopped at: Completed 01-foundation-01-PLAN.md
+Last session: 2026-03-19T01:31:39.554Z
+Stopped at: Completed 01-foundation-02-PLAN.md
 Resume file: None
