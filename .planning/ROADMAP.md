@@ -47,7 +47,13 @@ Plans:
   3. The detected document type is visible in the job result before the user initiates any download
   4. User can override the detected document type and re-trigger extraction against the correct schema
   5. Swapping the LLM provider requires only a config change — no extractor code changes
-**Plans**: TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Pydantic extraction schemas, schema registry, job store + config + API model extensions
+- [ ] 02-02-PLAN.md — Test fixtures (5 markdown fixtures) and test scaffolds (16 test stubs with xfail)
+- [ ] 02-03-PLAN.md — LLM provider abstraction (Protocol + GeminiProvider + registry) and extraction service
+- [ ] 02-04-PLAN.md — API integration (pipeline wiring, GET/PATCH endpoints) and finalize all tests
 
 ### Phase 3: CSV Export
 **Goal**: Per-type CSV formatters that serialize a validated ExtractionResult to a UTF-8-with-BOM CSV with schema-correct column ordering, exposed via GET /jobs/{id}/export
@@ -88,7 +94,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
-| 2. Extraction Pipeline | 0/TBD | Not started | - |
+| 2. Extraction Pipeline | 0/4 | Not started | - |
 | 3. CSV Export | 0/TBD | Not started | - |
 | 4. Full API Integration | 0/TBD | Not started | - |
 | 5. Web UI | 0/TBD | Not started | - |
