@@ -1,9 +1,30 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from typing import Any, Optional
 
 from src.core.job_store import job_store
 
 router = APIRouter()
+
+
+def _serialize_extraction(result: Optional[dict]) -> Optional[dict]:
+    """Replace None values with 'Not found' for API response. Satisfies REV-03."""
+    if result is None:
+        return None
+
+    def _replace(v: Any) -> Any:
+        if v is None:
+            return "Not found"
+        if isinstance(v, list):
+            return [
+                {k: _replace(vv) for k, vv in item.items()} if isinstance(item, dict) else _replace(item)
+                for item in v
+            ]
+        if isinstance(v, dict):
+            return {k: _replace(vv) for k, vv in v.items()}
+        return v
+
+    return {k: _replace(v) for k, v in result.items()}
 
 
 @router.get("/jobs/{job_id}")
@@ -19,23 +40,17 @@ async def get_job(job_id: str):
             },
         )
 
+    response = {
+        "job_id": job.job_id,
+        "status": job.status,
+        "doc_type": job.doc_type,
+    }
+
     if job.status == "complete":
-        return {
-            "job_id": job.job_id,
-            "status": "complete",
-            "result": {"raw_text": job.raw_text},
-        }
+        response["extraction_result"] = _serialize_extraction(job.extraction_result)
 
     if job.status == "error":
-        return JSONResponse(
-            status_code=200,
-            content={
-                "job_id": job.job_id,
-                "status": "error",
-                "error_code": job.error_code,
-                "error_message": job.error_message,
-            },
-        )
+        response["error_code"] = job.error_code
+        response["error_message"] = job.error_message
 
-    # pending or processing
-    return {"job_id": job.job_id, "status": job.status}
+    return response

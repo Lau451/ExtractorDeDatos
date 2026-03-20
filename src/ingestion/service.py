@@ -6,6 +6,7 @@ from docling.datamodel.base_models import DocumentStream
 
 from src.core.config import settings
 from src.core.job_store import job_store
+from src.extraction.service import run_extraction_pipeline
 from src.ingestion.docling_adapter import build_converter
 
 logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ async def process_document(job_id: str, data: bytes, filename: str) -> None:
             )
             return
         await job_store.set_complete(job_id, raw_text=markdown)
+        await run_extraction_pipeline(job_id)
     except asyncio.TimeoutError:
         await job_store.set_error(
             job_id,
