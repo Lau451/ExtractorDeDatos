@@ -13,7 +13,6 @@ def load_fixture(name: str) -> str:
 # ---- Classification tests (CLS-01) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_classify_returns_known_type():
     """CLS-01: classify() returns one of the 5 known type strings."""
     known_types = {
@@ -34,7 +33,6 @@ async def test_classify_returns_known_type():
         assert result in known_types
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_classify_unknown():
     """CLS-01: classify() returns 'unknown' for ambiguous text."""
     with patch("src.llm.gemini.GeminiProvider") as MockProvider:
@@ -396,32 +394,34 @@ async def test_supplier_comparison_line_items():
 # ---- Provider abstraction (EXT-09) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_provider_registry_swap():
     """EXT-09: Swapping LLM_PROVIDER uses the registered provider."""
-    import os
+    from src.llm import registry as llm_registry
 
-    with patch.dict(os.environ, {"LLM_PROVIDER": "mock_provider"}):
-        from src.llm.registry import get_provider
+    # A mock provider that satisfies the LLMProvider Protocol
+    mock_provider = MagicMock()
+    mock_provider.classify = AsyncMock(return_value="invoice")
+    mock_provider.extract = AsyncMock()
 
-        # A mock provider that satisfies the LLMProvider Protocol
-        mock_provider = MagicMock()
-        mock_provider.classify = AsyncMock(return_value="invoice")
-        mock_provider.extract = AsyncMock()
+    # Register mock provider and configure settings to use it
+    llm_registry.register_provider("mock_provider", lambda: mock_provider)
+    llm_registry.clear_cache()
 
-        with patch("src.llm.registry._REGISTRY", {"mock_provider": lambda: mock_provider}):
-            provider = get_provider()
-            assert provider is mock_provider
+    with patch.object(llm_registry.settings, "llm_provider", "mock_provider"):
+        provider = llm_registry.get_provider()
+        assert provider is mock_provider
 
-            # Verify it uses the swapped provider
-            result = await provider.classify("some document text")
-            assert result == "invoice"
+        # Verify it uses the swapped provider
+        result = await provider.classify("some document text")
+        assert result == "invoice"
+
+    # Restore cache state
+    llm_registry.clear_cache()
 
 
 # ---- Gemini SDK (EXT-10) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_gemini_provider_uses_correct_sdk():
     """EXT-10: GeminiProvider uses google-genai, not google-generativeai."""
     import sys
