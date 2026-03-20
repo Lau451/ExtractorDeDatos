@@ -16,9 +16,9 @@
 
 ### Document Classification
 
-- [ ] **CLS-01**: System automatically detects the document type (purchase order, tender/RFQ, quotation, invoice, or supplier comparison) after upload
+- [x] **CLS-01**: System automatically detects the document type (purchase order, tender/RFQ, quotation, invoice, or supplier comparison) after upload
 - [x] **CLS-02**: User can see the detected document type before extraction begins
-- [ ] **CLS-03**: User can override the detected document type via a dropdown before extraction begins
+- [x] **CLS-03**: User can override the detected document type via a dropdown before extraction begins
 
 ### Field Extraction
 
@@ -100,9 +100,9 @@
 | API-01 | Phase 1 | Complete |
 | API-02 | Phase 1 | Complete |
 | API-05 | Phase 1 | Complete |
-| CLS-01 | Phase 2 | Pending |
+| CLS-01 | Phase 2 | Complete |
 | CLS-02 | Phase 2 | Complete |
-| CLS-03 | Phase 2 | Pending |
+| CLS-03 | Phase 2 | Complete |
 | EXT-01 | Phase 2 | Complete |
 | EXT-02 | Phase 2 | Complete |
 | EXT-03 | Phase 2 | Complete |

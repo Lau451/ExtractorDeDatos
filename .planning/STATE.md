@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-20T00:03:02.338Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-19T20:06:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 7
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 02 (extraction-pipeline) — EXECUTING
-Plan: 1 of 4
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Plan: 1 of 4
 | Phase 01-foundation P02 | 5 min | 2 tasks | 17 files |
 | Phase 01-foundation P03 | 3 min | 2 tasks | 2 files |
 | Phase 02-extraction-pipeline P01 | 4 min | 2 tasks | 12 files |
+| Phase 02-extraction-pipeline P02 | 2 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: exc.__cause__ unwrapping surfaces real Docling pipeline error instead of opaque wrapper; logging.exception() auto-includes full traceback
 - [Phase 02-extraction-pipeline]: All schema fields use Optional[str] (not float/int) to prevent Gemini InvalidArgument 400 schema rejections
 - [Phase 02-extraction-pipeline]: extraction_result stored as Optional[dict] from .model_dump() for JSON serialization compatibility
+- [Phase 02-extraction-pipeline P02]: xfail stubs fleshed out with real assertion logic — Plans 03/04 only need to remove xfail decorators
+- [Phase 02-extraction-pipeline P02]: test_gemini_provider_uses_correct_sdk uses inspect.getsource() for static SDK import verification without live API
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T00:03:02.336Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-19T20:06:00.000Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
