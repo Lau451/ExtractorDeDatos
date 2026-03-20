@@ -16,8 +16,14 @@ class JobResponse(BaseModel):
     job_id: str
     status: str
     result: Optional[JobResultPayload] = None
+    doc_type: Optional[str] = None
+    extraction_result: Optional[dict] = None
     error_code: Optional[str] = None
     error_message: Optional[str] = None
+
+
+class DocTypeOverrideRequest(BaseModel):
+    doc_type: str
 
 
 class ErrorResponse(BaseModel):

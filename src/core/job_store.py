@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal, Optional
 
-JobStatus = Literal["pending", "processing", "complete", "error"]
+JobStatus = Literal["pending", "processing", "classifying", "extracting", "complete", "error"]
 
 
 @dataclass
@@ -13,6 +13,8 @@ class Job:
     raw_text: Optional[str] = None
     error_code: Optional[str] = None
     error_message: Optional[str] = None
+    doc_type: Optional[str] = None        # set after classification
+    extraction_result: Optional[dict] = None  # set after extraction, stored as dict via .model_dump()
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -53,6 +55,21 @@ class JobStore:
                 job.status = "error"
                 job.error_code = error_code
                 job.error_message = error_message
+                job.updated_at = datetime.utcnow()
+
+    async def set_doc_type(self, job_id: str, doc_type: str) -> None:
+        async with self._lock:
+            job = self._store.get(job_id)
+            if job:
+                job.doc_type = doc_type
+                job.updated_at = datetime.utcnow()
+
+    async def set_extraction_result(self, job_id: str, result: dict) -> None:
+        async with self._lock:
+            job = self._store.get(job_id)
+            if job:
+                job.extraction_result = result
+                job.status = "complete"
                 job.updated_at = datetime.utcnow()
 
 
