@@ -46,17 +46,16 @@ async def test_classify_unknown():
 # ---- Classification visibility (CLS-02) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_job_has_doc_type_after_classification(client):
     """CLS-02: GET /jobs/{id} includes doc_type after classification completes."""
     from src.core.job_store import job_store
 
     # Create a job via upload endpoint
     upload_response = await client.post(
-        "/jobs",
+        "/extract",
         files={"file": ("test.pdf", b"%PDF-1.4 fake content", "application/pdf")},
     )
-    assert upload_response.status_code == 202
+    assert upload_response.status_code == 200
     job_id = upload_response.json()["job_id"]
 
     # Simulate classification completing by setting doc_type directly
@@ -73,7 +72,6 @@ async def test_job_has_doc_type_after_classification(client):
 # ---- PO extraction (EXT-01, EXT-06) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_po_extraction_header():
     """EXT-01: PO extraction returns expected header fields."""
     from src.extraction.schemas.purchase_order import PurchaseOrderResult
@@ -105,7 +103,6 @@ async def test_po_extraction_header():
         assert result.payment_terms == "Net 30"
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_po_extraction_line_items():
     """EXT-06: PO extraction returns line_items list."""
     from src.extraction.schemas.purchase_order import PurchaseOrderResult, POLineItem
@@ -152,7 +149,6 @@ async def test_po_extraction_line_items():
 # ---- Tender/RFQ extraction (EXT-02) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_tender_extraction():
     """EXT-02: Tender/RFQ extraction returns expected header fields."""
     from src.extraction.schemas.tender_rfq import TenderRFQResult
@@ -182,7 +178,6 @@ async def test_tender_extraction():
 # ---- Quotation extraction (EXT-03) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_quotation_extraction():
     """EXT-03: Quotation extraction returns expected fields."""
     from src.extraction.schemas.quotation import QuotationResult
@@ -217,7 +212,6 @@ async def test_quotation_extraction():
 # ---- Invoice extraction (EXT-04, EXT-07) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_invoice_extraction_header():
     """EXT-04: Invoice extraction returns expected header fields."""
     from src.extraction.schemas.invoice import InvoiceResult
@@ -253,7 +247,6 @@ async def test_invoice_extraction_header():
         assert result.po_reference == "PO-2024-0847"
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_invoice_extraction_line_items():
     """EXT-07: Invoice extraction returns line_items list."""
     from src.extraction.schemas.invoice import InvoiceResult, InvoiceLineItem
@@ -298,7 +291,6 @@ async def test_invoice_extraction_line_items():
 # ---- Supplier comparison extraction (EXT-05, EXT-08) ----
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_supplier_comparison_header():
     """EXT-05: Supplier comparison returns expected header fields."""
     from src.extraction.schemas.supplier_comparison import SupplierComparisonResult
@@ -325,7 +317,6 @@ async def test_supplier_comparison_header():
         assert result.recommended_supplier == "Premium Pipe Solutions Inc."
 
 
-@pytest.mark.xfail(reason="Implementation not yet created")
 async def test_supplier_comparison_line_items():
     """EXT-08: Supplier comparison returns line_items per supplier."""
     from src.extraction.schemas.supplier_comparison import SupplierComparisonResult, SupplierRow
