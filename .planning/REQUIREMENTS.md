@@ -17,19 +17,19 @@
 ### Document Classification
 
 - [ ] **CLS-01**: System automatically detects the document type (purchase order, tender/RFQ, quotation, invoice, or supplier comparison) after upload
-- [ ] **CLS-02**: User can see the detected document type before extraction begins
+- [x] **CLS-02**: User can see the detected document type before extraction begins
 - [ ] **CLS-03**: User can override the detected document type via a dropdown before extraction begins
 
 ### Field Extraction
 
-- [ ] **EXT-01**: System extracts structured header fields from purchase orders (reference number, buyer, supplier, date, delivery date, total amount, currency, terms)
-- [ ] **EXT-02**: System extracts structured header fields from tenders/RFQs using the predefined schema
-- [ ] **EXT-03**: System extracts structured header fields from quotations using the predefined schema
-- [ ] **EXT-04**: System extracts structured header fields from invoices (invoice number, issuer, recipient, issue date, due date, subtotal, taxes, total, currency)
-- [ ] **EXT-05**: System extracts structured header fields from supplier comparison documents (project name, comparison date, evaluation criteria, overall recommended supplier)
-- [ ] **EXT-06**: System extracts line items (multi-row tables) from purchase orders — one row per item with description, quantity, unit price, extended price
-- [ ] **EXT-07**: System extracts line items from invoices — one row per item with description, quantity, unit price, extended price
-- [ ] **EXT-08**: System extracts per-supplier rows from supplier comparison documents — one row per supplier with unit price, total, lead time, payment terms, delivery terms
+- [x] **EXT-01**: System extracts structured header fields from purchase orders (reference number, buyer, supplier, date, delivery date, total amount, currency, terms)
+- [x] **EXT-02**: System extracts structured header fields from tenders/RFQs using the predefined schema
+- [x] **EXT-03**: System extracts structured header fields from quotations using the predefined schema
+- [x] **EXT-04**: System extracts structured header fields from invoices (invoice number, issuer, recipient, issue date, due date, subtotal, taxes, total, currency)
+- [x] **EXT-05**: System extracts structured header fields from supplier comparison documents (project name, comparison date, evaluation criteria, overall recommended supplier)
+- [x] **EXT-06**: System extracts line items (multi-row tables) from purchase orders — one row per item with description, quantity, unit price, extended price
+- [x] **EXT-07**: System extracts line items from invoices — one row per item with description, quantity, unit price, extended price
+- [x] **EXT-08**: System extracts per-supplier rows from supplier comparison documents — one row per supplier with unit price, total, lead time, payment terms, delivery terms
 - [ ] **EXT-09**: LLM extraction uses a pluggable provider abstraction — Gemini 2.5 Flash is the default; swapping to another provider requires only a config change
 - [ ] **EXT-10**: System uses Gemini 2.5 Flash (via `google-genai` SDK) as the default extraction LLM
 
@@ -101,16 +101,16 @@
 | API-02 | Phase 1 | Complete |
 | API-05 | Phase 1 | Complete |
 | CLS-01 | Phase 2 | Pending |
-| CLS-02 | Phase 2 | Pending |
+| CLS-02 | Phase 2 | Complete |
 | CLS-03 | Phase 2 | Pending |
-| EXT-01 | Phase 2 | Pending |
-| EXT-02 | Phase 2 | Pending |
-| EXT-03 | Phase 2 | Pending |
-| EXT-04 | Phase 2 | Pending |
-| EXT-05 | Phase 2 | Pending |
-| EXT-06 | Phase 2 | Pending |
-| EXT-07 | Phase 2 | Pending |
-| EXT-08 | Phase 2 | Pending |
+| EXT-01 | Phase 2 | Complete |
+| EXT-02 | Phase 2 | Complete |
+| EXT-03 | Phase 2 | Complete |
+| EXT-04 | Phase 2 | Complete |
+| EXT-05 | Phase 2 | Complete |
+| EXT-06 | Phase 2 | Complete |
+| EXT-07 | Phase 2 | Complete |
+| EXT-08 | Phase 2 | Complete |
 | EXT-09 | Phase 2 | Pending |
 | EXT-10 | Phase 2 | Pending |
 | EXP-01 | Phase 3 | Pending |
