@@ -30,8 +30,8 @@
 - [x] **EXT-06**: System extracts line items (multi-row tables) from purchase orders — one row per item with description, quantity, unit price, extended price
 - [x] **EXT-07**: System extracts line items from invoices — one row per item with description, quantity, unit price, extended price
 - [x] **EXT-08**: System extracts per-supplier rows from supplier comparison documents — one row per supplier with unit price, total, lead time, payment terms, delivery terms
-- [ ] **EXT-09**: LLM extraction uses a pluggable provider abstraction — Gemini 2.5 Flash is the default; swapping to another provider requires only a config change
-- [ ] **EXT-10**: System uses Gemini 2.5 Flash (via `google-genai` SDK) as the default extraction LLM
+- [x] **EXT-09**: LLM extraction uses a pluggable provider abstraction — Gemini 2.5 Flash is the default; swapping to another provider requires only a config change
+- [x] **EXT-10**: System uses Gemini 2.5 Flash (via `google-genai` SDK) as the default extraction LLM
 
 ### Review & Correction
 
@@ -111,8 +111,8 @@
 | EXT-06 | Phase 2 | Complete |
 | EXT-07 | Phase 2 | Complete |
 | EXT-08 | Phase 2 | Complete |
-| EXT-09 | Phase 2 | Pending |
-| EXT-10 | Phase 2 | Pending |
+| EXT-09 | Phase 2 | Complete |
+| EXT-10 | Phase 2 | Complete |
 | EXP-01 | Phase 3 | Pending |
 | EXP-02 | Phase 3 | Pending |
 | EXP-03 | Phase 3 | Pending |

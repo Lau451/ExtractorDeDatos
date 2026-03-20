@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-19T20:06:00.000Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-20T00:14:40.291Z"
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 2 of 4
 | Phase 01-foundation P03 | 3 min | 2 tasks | 2 files |
 | Phase 02-extraction-pipeline P01 | 4 min | 2 tasks | 12 files |
 | Phase 02-extraction-pipeline P02 | 2 min | 2 tasks | 7 files |
+| Phase 02-extraction-pipeline P03 | 4 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,10 @@ Recent decisions affecting current work:
 - [Phase 02-extraction-pipeline]: extraction_result stored as Optional[dict] from .model_dump() for JSON serialization compatibility
 - [Phase 02-extraction-pipeline P02]: xfail stubs fleshed out with real assertion logic — Plans 03/04 only need to remove xfail decorators
 - [Phase 02-extraction-pipeline P02]: test_gemini_provider_uses_correct_sdk uses inspect.getsource() for static SDK import verification without live API
+- [Phase 02-extraction-pipeline]: LLMProvider as Protocol not ABC - structural subtyping allows mock providers without inheritance
+- [Phase 02-extraction-pipeline]: Provider registry caches instances after first call - single GeminiProvider per process
+- [Phase 02-extraction-pipeline]: Unknown doc_type sets status to complete without extraction - user must PATCH to re-trigger
+- [Phase 02-extraction-pipeline]: register_provider() + clear_cache() enable test isolation without complex DI
 
 ### Pending Todos
 
@@ -87,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T20:06:00.000Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-20T00:14:40.288Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
