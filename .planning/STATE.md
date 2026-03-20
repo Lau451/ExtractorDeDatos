@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-20T00:14:40.291Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-20T00:24:39.809Z"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -51,6 +51,7 @@ Plan: 2 of 4
 | Phase 02-extraction-pipeline P01 | 4 min | 2 tasks | 12 files |
 | Phase 02-extraction-pipeline P02 | 2 min | 2 tasks | 7 files |
 | Phase 02-extraction-pipeline P03 | 4 min | 2 tasks | 6 files |
+| Phase 02-extraction-pipeline P04 | 9 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02-extraction-pipeline]: Provider registry caches instances after first call - single GeminiProvider per process
 - [Phase 02-extraction-pipeline]: Unknown doc_type sets status to complete without extraction - user must PATCH to re-trigger
 - [Phase 02-extraction-pipeline]: register_provider() + clear_cache() enable test isolation without complex DI
+- [Phase 02-extraction-pipeline]: Patch src.api.routes.doc_type.extract_with_type (not src.extraction.service) for test isolation — must target the reference in the route module namespace
+- [Phase 02-extraction-pipeline]: Updated test_jobs.py to treat classifying/extracting as non-terminal statuses and removed result.raw_text assertion — API no longer returns raw_text wrapper
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T00:14:40.288Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-03-20T00:24:39.806Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
