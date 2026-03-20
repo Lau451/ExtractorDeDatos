@@ -2,6 +2,7 @@
 import os
 import uuid
 import pytest
+from unittest.mock import patch, AsyncMock
 
 from src.core.job_store import job_store
 from src.ingestion.service import process_document
@@ -42,10 +43,14 @@ def test_validate_rejected_extensions():
 # ---------------------------------------------------------------------------
 
 async def _run_ingestion(data: bytes, filename: str):
-    """Helper: create a job, run process_document, return the job."""
+    """Helper: create a job, run process_document, return the job.
+
+    Extraction pipeline is mocked — ingestion tests verify ingestion logic only.
+    """
     job_id = str(uuid.uuid4())
     await job_store.create(job_id)
-    await process_document(job_id, data, filename)
+    with patch("src.ingestion.service.run_extraction_pipeline", new=AsyncMock(return_value=None)):
+        await process_document(job_id, data, filename)
     return await job_store.get(job_id)
 
 
