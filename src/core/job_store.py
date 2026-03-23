@@ -1,9 +1,34 @@
 import asyncio
+import copy
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Literal, Optional
 
 JobStatus = Literal["pending", "processing", "classifying", "extracting", "complete", "error"]
+
+JOB_TTL = timedelta(hours=1)
+
+
+def _deep_merge(base: dict, patch: dict) -> dict:
+    """Return base with patch applied recursively. Does not mutate either argument."""
+    result = copy.deepcopy(base)
+    for key, patch_val in patch.items():
+        base_val = result.get(key)
+        if isinstance(base_val, dict) and isinstance(patch_val, dict):
+            result[key] = _deep_merge(base_val, patch_val)
+        elif isinstance(base_val, list) and isinstance(patch_val, list):
+            merged_list = list(base_val)
+            for i, patch_item in enumerate(patch_val):
+                if i < len(merged_list) and isinstance(merged_list[i], dict) and isinstance(patch_item, dict):
+                    merged_list[i] = _deep_merge(merged_list[i], patch_item)
+                elif i < len(merged_list):
+                    merged_list[i] = patch_item
+                else:
+                    merged_list.append(patch_item)
+            result[key] = merged_list
+        else:
+            result[key] = patch_val
+    return result
 
 
 @dataclass
@@ -78,6 +103,26 @@ class JobStore:
                 job.extraction_result = result
                 job.status = "complete"
                 job.updated_at = datetime.utcnow()
+
+    async def patch_extraction_result(self, job_id: str, patch: dict) -> Optional["Job"]:
+        """Deep-merge patch into extraction_result. Returns updated Job or None if not found."""
+        async with self._lock:
+            job = self._store.get(job_id)
+            if job is None:
+                return None
+            current = job.extraction_result or {}
+            job.extraction_result = _deep_merge(current, patch)
+            job.updated_at = datetime.utcnow()
+            return job
+
+    async def cleanup_expired_jobs(self) -> int:
+        """Remove jobs older than JOB_TTL. Returns count of removed jobs."""
+        cutoff = datetime.utcnow() - JOB_TTL
+        async with self._lock:
+            expired = [jid for jid, job in self._store.items() if job.created_at < cutoff]
+            for jid in expired:
+                del self._store[jid]
+            return len(expired)
 
 
 # Module-level singleton

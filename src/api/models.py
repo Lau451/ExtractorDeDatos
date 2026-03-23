@@ -26,6 +26,10 @@ class DocTypeOverrideRequest(BaseModel):
     doc_type: str
 
 
+class PatchFieldsRequest(BaseModel):
+    fields: dict  # {"field_name": "new_value"} — flat or nested, deep-merged into extraction_result
+
+
 class ErrorResponse(BaseModel):
     error: str
     message: str
