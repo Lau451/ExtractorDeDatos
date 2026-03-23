@@ -39,7 +39,7 @@
 - [ ] **REV-02**: User can edit any extracted field value inline in the review table
 - [ ] **REV-03**: Fields that could not be extracted are shown as "Not found" (not blank) in the review table
 - [ ] **REV-04**: User can see extraction progress (spinner with status text) while the document is being processed
-- [ ] **REV-05**: Edited values are reflected in the downloaded CSV (not the originally extracted values)
+- [x] **REV-05**: Edited values are reflected in the downloaded CSV (not the originally extracted values)
 
 ### CSV Export
 
@@ -52,7 +52,7 @@
 
 - [x] **API-01**: API exposes a POST /extract endpoint that accepts a file upload and returns a job ID immediately
 - [x] **API-02**: API exposes a GET /jobs/{id} endpoint that returns the current job status (pending / processing / complete / error)
-- [ ] **API-03**: API exposes a PATCH /jobs/{id}/fields endpoint that accepts user-corrected field values
+- [x] **API-03**: API exposes a PATCH /jobs/{id}/fields endpoint that accepts user-corrected field values
 - [x] **API-04**: API exposes a GET /jobs/{id}/export endpoint that returns the final CSV file (applying any user corrections)
 - [x] **API-05**: API exposes a GET /health endpoint that returns service health status
 
@@ -118,8 +118,8 @@
 | EXP-03 | Phase 3 | Complete |
 | EXP-04 | Phase 3 | Complete |
 | API-04 | Phase 3 | Complete |
-| API-03 | Phase 4 | Pending |
-| REV-05 | Phase 4 | Pending |
+| API-03 | Phase 4 | Complete |
+| REV-05 | Phase 4 | Complete |
 | REV-01 | Phase 5 | Pending |
 | REV-02 | Phase 5 | Pending |
 | REV-03 | Phase 5 | Pending |

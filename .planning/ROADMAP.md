@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Running FastAPI server with safe multi-format file ingestion and async job infrastructure (completed 2026-03-19)
 - [ ] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
 - [x] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types (completed 2026-03-23)
-- [ ] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export
+- [x] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export (completed 2026-03-23)
 - [ ] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download
 
 ## Phase Details
@@ -78,7 +78,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can PATCH corrected field values to a job and the subsequent CSV download contains the corrected values, not the originally extracted values
   2. Failed jobs expose a human-readable error state (Docling timeout, Gemini error, invalid file) rather than a 500 response
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 04-01-PLAN.md — PATCH endpoint with deep merge, error code constants, TTL cleanup, full test suite
@@ -104,5 +104,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
-| 4. Full API Integration | 0/1 | Not started | - |
+| 4. Full API Integration | 1/1 | Complete   | 2026-03-23 |
 | 5. Web UI | 0/TBD | Not started | - |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-23T21:51:48.742Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-23T23:29:56.458Z"
 progress:
   total_phases: 5
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
+  completed_phases: 4
+  total_plans: 11
+  completed_plans: 11
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** A procurement analyst can upload any business document and get a structured, editable CSV extract in seconds — without manual data entry.
-**Current focus:** Phase 03 — csv-export
+**Current focus:** Phase 04 — full-api-integration
 
 ## Current Position
 
-Phase: 03 (csv-export) — COMPLETE
-Plan: 3 of 3 (all plans complete)
+Phase: 04 (full-api-integration) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Plan: 3 of 3 (all plans complete)
 | Phase 03-csv-export P01 | 5 | 1 tasks | 3 files |
 | Phase 03-csv-export P02 | 4 | 2 tasks | 3 files |
 | Phase 03-csv-export P03 | 5 | 2 tasks | 3 files |
+| Phase 04-full-api-integration P01 | 4 min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Recent decisions affecting current work:
 - [Phase 03-csv-export]: csv.writer lineterminator set to \r\n (RFC 4180) + BOM as \ufeff in io.StringIO buffer — produces b'\xef\xbb\xbf' prefix; model_fields iteration for schema-driven column ordering
 - [Phase 03-csv-export]: EXPORTABLE_DOC_TYPES derived from FORMATTER_REGISTRY.keys() at module load — stays in sync automatically when new formatters are added
 - [Phase 03-csv-export P03]: set_raw_text() added to JobStore to decouple text storage from status progression; status='complete' only reachable via set_extraction_result() or unknown doc_type path
+- [Phase 04-full-api-integration]: patch_extraction_result returns Optional[Job] directly to avoid TOCTOU re-fetch after deep merge
+- [Phase 04-full-api-integration]: _deep_merge uses copy.deepcopy — pure function, no mutation of base or patch arguments
+- [Phase 04-full-api-integration]: PATCH response reuses _serialize_extraction() from jobs.py for consistent None->Not found serialization
 
 ### Pending Todos
 
@@ -101,6 +105,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T21:51:48.739Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-full-api-integration/04-CONTEXT.md
+Last session: 2026-03-23T23:29:56.455Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None
