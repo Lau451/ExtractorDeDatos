@@ -46,6 +46,9 @@ async def _run_ingestion(data: bytes, filename: str):
     """Helper: create a job, run process_document, return the job.
 
     Extraction pipeline is mocked — ingestion tests verify ingestion logic only.
+    After process_document returns, the job will be in 'processing' status
+    because set_raw_text does not change status. Only set_extraction_result
+    (called by the extraction pipeline, which is mocked here) sets 'complete'.
     """
     job_id = str(uuid.uuid4())
     await job_store.create(job_id)
@@ -59,7 +62,7 @@ async def test_text_pdf_ingestion():
     with open(os.path.join(FIXTURES, "sample.pdf"), "rb") as f:
         data = f.read()
     job = await _run_ingestion(data, "sample.pdf")
-    assert job.status == "complete", f"Expected complete, got {job.status}: {job.error_code} — {job.error_message}"
+    assert job.status == "processing", f"Expected processing, got {job.status}: {job.error_code} — {job.error_message}"
     assert job.raw_text and len(job.raw_text.strip()) > 0
 
 
@@ -69,7 +72,7 @@ async def test_scanned_pdf_ingestion():
         data = f.read()
     job = await _run_ingestion(data, "scanned.pdf")
     # OCR output is non-deterministic — assert only non-empty
-    assert job.status == "complete", f"Expected complete, got {job.status}: {job.error_code} — {job.error_message}"
+    assert job.status == "processing", f"Expected processing, got {job.status}: {job.error_code} — {job.error_message}"
     assert job.raw_text and len(job.raw_text.strip()) > 0
 
 
@@ -78,7 +81,7 @@ async def test_xlsx_ingestion():
     with open(os.path.join(FIXTURES, "sample.xlsx"), "rb") as f:
         data = f.read()
     job = await _run_ingestion(data, "sample.xlsx")
-    assert job.status == "complete", f"Expected complete, got {job.status}: {job.error_code} — {job.error_message}"
+    assert job.status == "processing", f"Expected processing, got {job.status}: {job.error_code} — {job.error_message}"
     assert job.raw_text and len(job.raw_text.strip()) > 0
 
 
@@ -87,7 +90,7 @@ async def test_png_ingestion():
     with open(os.path.join(FIXTURES, "sample.png"), "rb") as f:
         data = f.read()
     job = await _run_ingestion(data, "sample.png")
-    assert job.status == "complete", f"Expected complete, got {job.status}: {job.error_code} — {job.error_message}"
+    assert job.status == "processing", f"Expected processing, got {job.status}: {job.error_code} — {job.error_message}"
     assert job.raw_text and len(job.raw_text.strip()) > 0
 
 
@@ -96,6 +99,6 @@ async def test_html_ingestion():
     with open(os.path.join(FIXTURES, "sample.html"), "rb") as f:
         data = f.read()
     job = await _run_ingestion(data, "sample.html")
-    assert job.status == "complete", f"Expected complete, got {job.status}: {job.error_code} — {job.error_message}"
+    assert job.status == "processing", f"Expected processing, got {job.status}: {job.error_code} — {job.error_message}"
     assert job.raw_text and len(job.raw_text.strip()) > 0
     assert "Test Document" in job.raw_text
