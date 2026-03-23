@@ -43,10 +43,10 @@
 
 ### CSV Export
 
-- [ ] **EXP-01**: User can download the extraction result as a CSV file
-- [ ] **EXP-02**: CSV column order matches the predefined schema for the detected document type
-- [ ] **EXP-03**: CSV file is encoded as UTF-8 with BOM (utf-8-sig) for correct display in Excel
-- [ ] **EXP-04**: Each document type produces its own CSV structure (purchase orders, tenders/RFQs, quotations, invoices, and supplier comparisons each have distinct column schemas)
+- [x] **EXP-01**: User can download the extraction result as a CSV file
+- [x] **EXP-02**: CSV column order matches the predefined schema for the detected document type
+- [x] **EXP-03**: CSV file is encoded as UTF-8 with BOM (utf-8-sig) for correct display in Excel
+- [x] **EXP-04**: Each document type produces its own CSV structure (purchase orders, tenders/RFQs, quotations, invoices, and supplier comparisons each have distinct column schemas)
 
 ### REST API
 
@@ -113,10 +113,10 @@
 | EXT-08 | Phase 2 | Complete |
 | EXT-09 | Phase 2 | Complete |
 | EXT-10 | Phase 2 | Complete |
-| EXP-01 | Phase 3 | Pending |
-| EXP-02 | Phase 3 | Pending |
-| EXP-03 | Phase 3 | Pending |
-| EXP-04 | Phase 3 | Pending |
+| EXP-01 | Phase 3 | Complete |
+| EXP-02 | Phase 3 | Complete |
+| EXP-03 | Phase 3 | Complete |
+| EXP-04 | Phase 3 | Complete |
 | API-04 | Phase 3 | Pending |
 | API-03 | Phase 4 | Pending |
 | REV-05 | Phase 4 | Pending |
