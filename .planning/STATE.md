@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-csv-export-02-PLAN.md
-last_updated: "2026-03-23T02:21:58.599Z"
+stopped_at: Completed 03-csv-export-03-PLAN.md
+last_updated: "2026-03-23T03:21:00.000Z"
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 
 ## Current Position
 
-Phase: 03 (csv-export) — EXECUTING
-Plan: 2 of 2 (plan 01 complete)
+Phase: 03 (csv-export) — COMPLETE
+Plan: 3 of 3 (all plans complete)
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Plan: 2 of 2 (plan 01 complete)
 | Phase 02-extraction-pipeline P04 | 9 min | 2 tasks | 7 files |
 | Phase 03-csv-export P01 | 5 | 1 tasks | 3 files |
 | Phase 03-csv-export P02 | 4 | 2 tasks | 3 files |
+| Phase 03-csv-export P03 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,7 @@ Recent decisions affecting current work:
 - [Phase 02-extraction-pipeline]: Updated test_jobs.py to treat classifying/extracting as non-terminal statuses and removed result.raw_text assertion — API no longer returns raw_text wrapper
 - [Phase 03-csv-export]: csv.writer lineterminator set to \r\n (RFC 4180) + BOM as \ufeff in io.StringIO buffer — produces b'\xef\xbb\xbf' prefix; model_fields iteration for schema-driven column ordering
 - [Phase 03-csv-export]: EXPORTABLE_DOC_TYPES derived from FORMATTER_REGISTRY.keys() at module load — stays in sync automatically when new formatters are added
+- [Phase 03-csv-export P03]: set_raw_text() added to JobStore to decouple text storage from status progression; status='complete' only reachable via set_extraction_result() or unknown doc_type path
 
 ### Pending Todos
 
@@ -99,6 +101,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T02:17:18.727Z
-Stopped at: Completed 03-csv-export-02-PLAN.md
+Last session: 2026-03-23T03:21:00.000Z
+Stopped at: Completed 03-csv-export-03-PLAN.md
 Resume file: None
