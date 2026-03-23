@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 3 complete — CSV export layer fully implemented. Five per-type formatters (formatters.py), `GET /jobs/{id}/export` endpoint, 49/49 tests passing. Phase 4 (full-api-integration) is next.
+- **Current State:** Phase 3 complete — CSV export layer fully implemented and verified. Five per-type formatters (formatters.py), `GET /jobs/{id}/export` endpoint, status-collision bug fixed (set_raw_text replaces set_complete in ingestion), 49/49 tests passing. Phase 4 (full-api-integration) is next.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-22 — Phase 3 complete (csv-export)*
+*Last updated: 2026-03-23 — Phase 3 gap closure complete (status-collision fix, all gaps resolved)*
