@@ -64,7 +64,11 @@ Plans:
   2. The downloaded CSV opens in Excel without garbled characters
   3. CSV column order matches the predefined schema for the document type — no extra or reordered columns
   4. Each of the five document types produces its own distinct CSV structure (purchase order, tender/RFQ, quotation, invoice, supplier comparison)
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — CSV formatters for all 5 doc types with FORMATTER_REGISTRY and unit tests
+- [ ] 03-02-PLAN.md — GET /jobs/{id}/export endpoint with 409 gate and integration tests
 
 ### Phase 4: Full API Integration
 **Goal**: Complete REST API surface — PATCH endpoint for user-corrected field values merges edits into the extraction result so the exported CSV reflects corrections, plus TTL-based job cleanup and structured error states
@@ -95,6 +99,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
-| 3. CSV Export | 0/TBD | Not started | - |
+| 3. CSV Export | 0/2 | Not started | - |
 | 4. Full API Integration | 0/TBD | Not started | - |
 | 5. Web UI | 0/TBD | Not started | - |
