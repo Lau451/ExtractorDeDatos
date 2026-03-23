@@ -56,17 +56,10 @@ skipped: 1
 ## Gaps
 
 - truth: "GET /jobs/{job_id}/export returns 200 with CSV for a completed job"
-  status: failed
+  status: resolved
   reason: "User reported: error 409"
   severity: major
   test: 1
   root_cause: "Status collision: set_complete() in ingestion/service.py line 32 sets status='complete' (with extraction_result=None) before calling run_extraction_pipeline (line 33), which immediately overwrites status to 'classifying'. If export is called while extraction is in-flight, the status is not 'complete', triggering the 409 gate. The fix: do not call set_complete() mid-pipeline; 'complete' should only be set by set_extraction_result() at the end of the full pipeline."
-  artifacts:
-    - path: "src/ingestion/service.py"
-      issue: "line 32 calls set_complete() (sets status='complete') then line 33 starts extraction pipeline which immediately overwrites status to 'classifying'"
-    - path: "src/core/job_store.py"
-      issue: "set_complete() sets status='complete' with extraction_result=None — inconsistent with export requirements"
-  missing:
-    - "Remove or replace set_complete() call in ingestion/service.py — use an intermediate status (e.g., keep 'processing') instead of 'complete' to signal ingestion-done"
-    - "Ensure 'complete' status is only set by set_extraction_result() at end of full pipeline"
+  fix: "Plan 03-03 — added set_raw_text() to JobStore; ingestion now calls set_raw_text() instead of set_complete(); status='complete' is exclusively set by set_extraction_result() at end of full pipeline"
   debug_session: ".planning/debug/export-409-complete-job.md"
