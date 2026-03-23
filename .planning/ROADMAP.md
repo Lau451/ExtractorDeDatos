@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Running FastAPI server with safe multi-format file ingestion and async job infrastructure (completed 2026-03-19)
 - [ ] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
-- [ ] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types
+- [x] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types (completed 2026-03-23)
 - [ ] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export
 - [ ] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download
 
@@ -64,7 +64,7 @@ Plans:
   2. The downloaded CSV opens in Excel without garbled characters
   3. CSV column order matches the predefined schema for the document type — no extra or reordered columns
   4. Each of the five document types produces its own distinct CSV structure (purchase order, tender/RFQ, quotation, invoice, supplier comparison)
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 03-01-PLAN.md — CSV formatters for all 5 doc types with FORMATTER_REGISTRY and unit tests
@@ -99,6 +99,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
-| 3. CSV Export | 1/2 | In Progress|  |
+| 3. CSV Export | 2/2 | Complete   | 2026-03-23 |
 | 4. Full API Integration | 0/TBD | Not started | - |
 | 5. Web UI | 0/TBD | Not started | - |

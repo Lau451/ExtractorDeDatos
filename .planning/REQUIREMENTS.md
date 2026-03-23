@@ -53,7 +53,7 @@
 - [x] **API-01**: API exposes a POST /extract endpoint that accepts a file upload and returns a job ID immediately
 - [x] **API-02**: API exposes a GET /jobs/{id} endpoint that returns the current job status (pending / processing / complete / error)
 - [ ] **API-03**: API exposes a PATCH /jobs/{id}/fields endpoint that accepts user-corrected field values
-- [ ] **API-04**: API exposes a GET /jobs/{id}/export endpoint that returns the final CSV file (applying any user corrections)
+- [x] **API-04**: API exposes a GET /jobs/{id}/export endpoint that returns the final CSV file (applying any user corrections)
 - [x] **API-05**: API exposes a GET /health endpoint that returns service health status
 
 ## v2 Requirements
@@ -117,7 +117,7 @@
 | EXP-02 | Phase 3 | Complete |
 | EXP-03 | Phase 3 | Complete |
 | EXP-04 | Phase 3 | Complete |
-| API-04 | Phase 3 | Pending |
+| API-04 | Phase 3 | Complete |
 | API-03 | Phase 4 | Pending |
 | REV-05 | Phase 4 | Pending |
 | REV-01 | Phase 5 | Pending |
