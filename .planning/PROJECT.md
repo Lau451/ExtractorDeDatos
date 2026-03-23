@@ -40,18 +40,18 @@ A procurement analyst can upload any business document and get a structured, edi
 - [ ] User can edit/correct any extracted field value inline
 - [ ] Edited values are reflected in the final CSV output
 
-**CSV Export**
-- [ ] User can download the extraction result as a CSV file
-- [ ] CSV column order matches the predefined schema for each document type
-- [ ] Each document type produces its own CSV structure
+**CSV Export** *(Validated in Phase 3: csv-export)*
+- [x] User can download the extraction result as a CSV file
+- [x] CSV column order matches the predefined schema for each document type
+- [x] Each document type produces its own CSV structure
 
 **Web UI**
 - [ ] User can upload a file via a web browser interface
 - [ ] User sees extraction progress/status while the document is being processed
 - [ ] User can review, edit, and download the result from the same page
 
-**API**
-- [ ] REST API exposes upload, status polling, and CSV download endpoints
+**API** *(CSV download validated in Phase 3: csv-export)*
+- [x] REST API exposes upload, status polling, and CSV download endpoints
 - [ ] API processes one file per request (no batch uploads in v1)
 
 ### Out of Scope
@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 1 complete (all 3 plans, including gap closure) — FastAPI server running, Docling ingestion active for PDF/Excel/PNG/HTML with full-page OCR, real error surfacing, 15/15 tests passing. Phase 2 (extraction pipeline) is next.
+- **Current State:** Phase 3 complete — CSV export layer fully implemented. Five per-type formatters (formatters.py), `GET /jobs/{id}/export` endpoint, 49/49 tests passing. Phase 4 (full-api-integration) is next.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-19 — Phase 1 complete (gap closure included)*
+*Last updated: 2026-03-22 — Phase 3 complete (csv-export)*
