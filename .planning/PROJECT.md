@@ -35,10 +35,10 @@ A procurement analyst can upload any business document and get a structured, edi
 - [ ] System extracts structured fields from supplier comparison files using Gemini 2.5 Flash
 - [ ] Each document type has a defined CSV schema with strict column ordering
 
-**Review & Correction**
-- [ ] User can view all extracted fields before downloading the CSV
-- [ ] User can edit/correct any extracted field value inline
-- [ ] Edited values are reflected in the final CSV output
+**Review & Correction** *(Validated in Phase 4: full-api-integration)*
+- [x] User can view all extracted fields before downloading the CSV
+- [x] User can edit/correct any extracted field value inline
+- [x] Edited values are reflected in the final CSV output
 
 **CSV Export** *(Validated in Phase 3: csv-export)*
 - [x] User can download the extraction result as a CSV file
@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 3 complete — CSV export layer fully implemented and verified. Five per-type formatters (formatters.py), `GET /jobs/{id}/export` endpoint, status-collision bug fixed (set_raw_text replaces set_complete in ingestion), 49/49 tests passing. Phase 4 (full-api-integration) is next.
+- **Current State:** Phase 4 complete — PATCH /jobs/{id}/fields endpoint with deep merge, error code constants, TTL-based job cleanup, and 58/58 tests passing. API-03 and REV-05 requirements satisfied. Phase 5 (web-ui) is next.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-23 — Phase 3 gap closure complete (status-collision fix, all gaps resolved)*
+*Last updated: 2026-03-23 — Phase 4 complete (PATCH endpoint, error codes, TTL cleanup, REV-05 end-to-end verified)*
