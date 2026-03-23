@@ -29,7 +29,7 @@ async def process_document(job_id: str, data: bytes, filename: str) -> None:
                 "Document produced no extractable text",
             )
             return
-        await job_store.set_complete(job_id, raw_text=markdown)
+        await job_store.set_raw_text(job_id, raw_text=markdown)
         await run_extraction_pipeline(job_id)
     except asyncio.TimeoutError:
         await job_store.set_error(

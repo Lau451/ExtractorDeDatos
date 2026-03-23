@@ -40,6 +40,13 @@ class JobStore:
                 self._store[job_id].status = status
                 self._store[job_id].updated_at = datetime.utcnow()
 
+    async def set_raw_text(self, job_id: str, raw_text: str) -> None:
+        async with self._lock:
+            job = self._store.get(job_id)
+            if job:
+                job.raw_text = raw_text
+                job.updated_at = datetime.utcnow()
+
     async def set_complete(self, job_id: str, raw_text: str) -> None:
         async with self._lock:
             job = self._store.get(job_id)
