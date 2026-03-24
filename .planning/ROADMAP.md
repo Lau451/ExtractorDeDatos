@@ -101,10 +101,26 @@ Plans:
 - [ ] 05-03-PLAN.md — Review table, inline editing, line items table, doc type override, CSV download, production static serving
 - [ ] 05-04-PLAN.md — Gap closure: add /api prefix to FastAPI routers, update test URLs, remove Vite proxy rewrite
 
+### Phase 6: Product Table Extraction
+**Goal**: Add product line item extraction to Tender/RFQ and Quotation document types — retrofit line_items tables into Pydantic schemas, CSV formatters, and frontend review table so all five doc types have full line-item support
+**Depends on:** Phase 5
+**Requirements**: P6-SCHEMA-01, P6-SCHEMA-02, P6-CSV-01, P6-CSV-02, P6-FE-01, P6-FE-02, P6-TEST-01
+**Success Criteria** (what must be TRUE):
+  1. Tender/RFQ extraction results include line_items with item_number, quantity, and description fields
+  2. Quotation extraction results include line_items with item_number, quantity, and description fields
+  3. CSV export for tender/RFQ produces 11 columns (8 header + 3 line item) in denormalized format
+  4. CSV export for quotation produces 15 columns (12 header + 3 line item) in denormalized format
+  5. Frontend renders LineItemsTable for tender/RFQ and quotation documents
+**Plans:** 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Backend schemas (TenderLineItem, QuotationLineItem), CSV formatter switch, test updates
+- [ ] 06-02-PLAN.md — Frontend constants (LINE_ITEM_KEYS, DOC_TYPES_WITH_LINE_ITEMS) for tender/quotation
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -113,3 +129,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
 | 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
 | 5. Web UI | 3/4 | In Progress | |
+| 6. Product Table Extraction | 0/2 | Planned | |
