@@ -18,7 +18,7 @@ export function DocTypeBar({ docType, onOverride }: DocTypeBarProps) {
     <div className="flex flex-row gap-3 items-center mb-4">
       <span className="font-mono text-xs text-muted-foreground">Document type</span>
       <Badge variant="secondary">{DOC_TYPE_LABELS[docType] ?? docType}</Badge>
-      <Select onValueChange={onOverride}>
+      <Select onValueChange={(value) => { if (value) onOverride(value as string); }}>
         <SelectTrigger className="w-[200px]">
           <SelectValue placeholder="Override type" />
         </SelectTrigger>

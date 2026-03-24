@@ -50,6 +50,22 @@ app.include_router(doc_type_router)
 app.include_router(export_router)
 app.include_router(patch_router)
 
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+# Production static serving — only active when frontend/dist/ exists
+_dist_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+if os.path.isdir(_dist_dir):
+    _assets_dir = os.path.join(_dist_dir, "assets")
+    if os.path.isdir(_assets_dir):
+        app.mount("/assets", StaticFiles(directory=_assets_dir), name="static-assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def spa_fallback(full_path: str):
+        return FileResponse(os.path.join(_dist_dir, "index.html"))
+
+
 if __name__ == "__main__":
     import uvicorn
 
