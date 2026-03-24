@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 4 complete — PATCH /jobs/{id}/fields endpoint with deep merge, error code constants, TTL-based job cleanup, and 58/58 tests passing. API-03 and REV-05 requirements satisfied. Phase 5 (web-ui) is next.
+- **Current State:** Phase 4 complete — PATCH /jobs/{id}/fields endpoint with deep merge, error code constants, TTL-based job cleanup, and 61/61 tests passing. API-03 (including gap closure: 409 on None extraction_result, set_status invariant) and REV-05 requirements fully satisfied. Phase 5 (web-ui) is next.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-23 — Phase 4 complete (PATCH endpoint, error codes, TTL cleanup, REV-05 end-to-end verified)*
+*Last updated: 2026-03-23 — Phase 4 gap closure complete (PATCH None extraction_result guard, set_status invariant, 61/61 tests)*
