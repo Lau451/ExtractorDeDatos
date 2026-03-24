@@ -55,16 +55,20 @@ Exceptions:
 | Role | Size | Weight | Line Height | Font | Usage |
 |------|------|--------|-------------|------|-------|
 | Body | 14px | 400 | 1.5 | IBM Plex Sans | Table cell values, paragraph copy, error messages |
-| Label | 13px | 500 | 1.4 | IBM Plex Mono | Table header cells (Label column), doc type badge text, form labels |
+| Label | 12px | 400 | 1.4 | IBM Plex Mono | Table header cells (Label column), doc type badge text, form labels |
 | Heading | 20px | 600 | 1.2 | IBM Plex Mono | Section titles ("Extracted Fields", "Line Items"), page title |
-| Display | 28px | 700 | 1.1 | IBM Plex Mono | Upload zone primary text ("Drop your document here") |
+| Display | 28px | 600 | 1.1 | IBM Plex Mono | Upload zone primary text ("Drop your document here") |
 
-**Source:** Sizes derived from role hierarchy. IBM Plex fonts chosen to avoid generic Inter/system font per frontend-design skill. Monospace for labels reinforces the data-extraction/technical character of the tool without sacrificing readability.
+**Weights declared (2 total):**
+- 400 — normal: Body (IBM Plex Sans) and Label (IBM Plex Mono). Font family difference distinguishes the two roles at the same weight.
+- 600 — semibold: Heading and Display. Size difference (20px vs 28px) provides hierarchy within the monospace roles without requiring a 4th weight.
+
+**Source:** Sizes derived from role hierarchy. 13px Label collapsed to 12px for clear optical separation from 14px Body (1px difference is indistinguishable; 2px gap is not enough — 12px provides a clean step). IBM Plex fonts chosen to avoid generic Inter/system font per frontend-design skill. Monospace for labels reinforces the data-extraction/technical character of the tool without sacrificing readability.
 
 **Google Fonts import (add to index.html):**
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400&display=swap" rel="stylesheet">
 ```
 
 ---
@@ -79,7 +83,7 @@ shadcn/ui neutral palette (zinc-based). All values are CSS variables set by shad
 | Secondary (30%) | --card | bg-card | Review table container, progress card, error banner card |
 | Accent (10%) | --primary | bg-primary / text-primary | Primary CTA button, active cell bottom border during edit, "Upload another document" button |
 | Muted text | --muted-foreground | text-muted-foreground | "Not found" placeholder text, status labels, disabled states |
-| Destructive | --destructive | bg-destructive / text-destructive | Error banner background tint, "try again" button border (not fill) |
+| Destructive | --destructive | bg-destructive / text-destructive | Error banner background tint, "Retry Upload" button border (not fill) |
 
 Accent reserved for:
 1. Primary CTA button fill ("Upload Document" button, "Download CSV" button)
@@ -96,6 +100,21 @@ Do NOT use accent on: table row hovers, badge backgrounds, loading spinner, sect
 
 ---
 
+## Focal Points (per flow phase)
+
+Each flow phase has one declared focal element. All other elements are subordinate in visual weight.
+
+| Flow Phase | Focal Element | Implementation |
+|------------|--------------|----------------|
+| upload | Upload zone primary text + drop area border | Display role (28px/600) centered, `border-2 border-dashed border-muted-foreground` |
+| processing | Spinner + current status text | `Loader2 animate-spin` at 32px + Heading role text (20px/600) centered below |
+| review | "Extracted Fields" heading + primary Download CTA | Heading role (20px/600) at table top, `bg-primary` Download button right-aligned at table bottom |
+| done | "Upload another document" button | Outline accent button centered, only interactive element in view |
+
+**Source:** Derived from flow state machine and CONTEXT.md interaction decisions. Focal point per phase ensures clear user affordance at each step.
+
+---
+
 ## Component Inventory
 
 Components to install via `npx shadcn@latest add`:
@@ -103,7 +122,7 @@ Components to install via `npx shadcn@latest add`:
 | Component | shadcn name | Used In |
 |-----------|-------------|---------|
 | Table | table | ReviewTable.tsx, LineItemsTable.tsx |
-| Button | button | Upload CTA, Download CSV, Try again, Upload another |
+| Button | button | Upload CTA, Download CSV, Retry Upload, Upload another |
 | Input | input | EditableCell.tsx active state |
 | Select | select | DocTypeBar.tsx override dropdown |
 | Badge | badge | DocTypeBar.tsx document type display |
@@ -169,8 +188,8 @@ All interaction decisions below are locked (source: CONTEXT.md). Executor must n
 ### Error Banner
 
 - Replaces the spinner area (same card, same position — no layout shift)
-- Contains: `AlertCircle` icon + human-readable message + "Try again" button
-- "Try again" resets state machine to `{ tag: 'upload' }` — no page refresh
+- Contains: `AlertCircle` icon + human-readable message + "Retry Upload" button
+- "Retry Upload" resets state machine to `{ tag: 'upload' }` — no page refresh
 - No toast notifications
 
 ### Post-Download
@@ -205,14 +224,14 @@ All interaction decisions below are locked (source: CONTEXT.md). Executor must n
 | Error: INVALID_FILE_TYPE | "Unsupported file type. Supported: PDF, XLSX, XLS, PNG, JPG, HTML." |
 | Error: FILE_TOO_LARGE | "File is too large to process." |
 | Error: fallback | "An unexpected error occurred." |
-| Error CTA | "Try again" |
+| Error CTA | "Retry Upload" |
 | File validation error | "Unsupported file type. Please upload a PDF, XLSX, XLS, PNG, JPG, or HTML file." |
 | Doc type label | "Document type" |
 | Doc type override prompt | "Override type" |
 
 **Destructive actions in this phase:** None. The PATCH /fields endpoint overwrites field values, but this is non-destructive (user-initiated correction). No confirmation dialogs needed.
 
-**Source:** Status text stages locked in CONTEXT.md. Error messages from RESEARCH.md `errorMessages.ts` example. Doc type and table headings derived from REQUIREMENTS.md field descriptions.
+**Source:** Status text stages locked in CONTEXT.md. Error messages from RESEARCH.md `errorMessages.ts` example. Doc type and table headings derived from REQUIREMENTS.md field descriptions. "Retry Upload" replaces "Try again" for fuller self-description per checker recommendation.
 
 ---
 
@@ -224,7 +243,7 @@ The App.tsx state machine has exactly 4 phases. No back-navigation is permitted 
 upload → (file submitted) → processing → (poll complete) → review → (CSV downloaded) → done
                                        ↓ (poll error)
                                      error banner (inline, same card)
-                                       ↓ (Try again)
+                                       ↓ (Retry Upload)
                                      upload
 ```
 
