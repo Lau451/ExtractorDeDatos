@@ -72,4 +72,6 @@ export const LINE_ITEM_KEYS: Record<string, string> = {
   purchase_order: 'line_items',
   invoice: 'line_items',
   supplier_comparison: 'line_items',
+  tender_rfq: 'line_items',
+  quotation: 'line_items',
 };

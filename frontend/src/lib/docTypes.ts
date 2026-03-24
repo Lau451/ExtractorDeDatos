@@ -2,6 +2,8 @@ export const DOC_TYPES_WITH_LINE_ITEMS = new Set([
   'purchase_order',
   'invoice',
   'supplier_comparison',
+  'tender_rfq',
+  'quotation',
 ]);
 
 export const VALID_DOC_TYPES = [
