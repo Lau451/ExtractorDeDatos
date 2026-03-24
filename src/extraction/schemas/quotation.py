@@ -2,6 +2,12 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
+class QuotationLineItem(BaseModel):
+    item_number: Optional[str] = Field(None, description="Line item number or sequence number")
+    quantity: Optional[str] = Field(None, description="Quoted quantity as a string")
+    description: Optional[str] = Field(None, description="Product name or item description")
+
+
 class QuotationResult(BaseModel):
     quote_number: Optional[str] = Field(None, description="Quotation reference number")
     quote_date: Optional[str] = Field(None, description="Date the quotation was issued")
@@ -15,3 +21,4 @@ class QuotationResult(BaseModel):
     grand_total: Optional[str] = Field(None, description="Total amount including taxes")
     payment_terms: Optional[str] = Field(None, description="Payment terms (e.g., Net 30)")
     delivery_terms: Optional[str] = Field(None, description="Delivery or Incoterms specification")
+    line_items: list[QuotationLineItem] = Field(default_factory=list, description="List of quoted line items")
