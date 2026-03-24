@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 04-full-api-integration
 source: 04-01-SUMMARY.md
 started: 2026-03-23T00:00:00Z
@@ -49,7 +49,14 @@ skipped: 0
   reason: "User reported: He added the field, it didn't throw an error"
   severity: major
   test: 3
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "patch_extraction_result() line 113 uses `job.extraction_result or {}`, silently coercing a None extraction result to empty dict and returning 200 instead of an error. A job can exist with status=complete but extraction_result=None if set_status() was used directly, bypassing the extraction pipeline. The route has no guard for this case."
+  artifacts:
+    - path: "src/core/job_store.py"
+      issue: "patch_extraction_result() line 113: `current = job.extraction_result or {}` silently initializes to empty dict when extraction_result was never set"
+    - path: "src/api/routes/patch.py"
+      issue: "No guard checking that job.extraction_result is not None before calling patch_extraction_result(); only checks status != complete"
+  missing:
+    - "In patch.py: guard after status check — if job.extraction_result is None, return 409 or 422"
+    - "In job_store.py patch_extraction_result(): replace `or {}` with explicit None check that returns None when extraction_result was never set"
+    - "In job_store.py: set_status() should not allow transitioning to 'complete' without extraction_result being set (invariant enforcement)"
   debug_session: ""
