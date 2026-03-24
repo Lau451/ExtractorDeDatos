@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-web-ui-03-PLAN.md
-last_updated: "2026-03-24T03:50:45.010Z"
+stopped_at: Completed 05-web-ui-04-PLAN.md
+last_updated: "2026-03-24T13:56:24.378Z"
 progress:
   total_phases: 5
   completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 16
+  completed_plans: 16
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 05 (web-ui) — EXECUTING
-Plan: 2 of 3
+Plan: 1 of 4
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Plan: 2 of 3
 | Phase 05-web-ui P01 | 8 | 2 tasks | 29 files |
 | Phase 05-web-ui P02 | 2 min | 2 tasks | 6 files |
 | Phase 05-web-ui P03 | 4 min | 3 tasks | 8 files |
+| Phase 05-web-ui P04 | 5 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,8 @@ Recent decisions affecting current work:
 - [Phase 05-web-ui P02]: intervalRef.current stores live interval ID for stale-closure-safe cleanup
 - [Phase 05-web-ui]: base-ui Select onValueChange passes generic {} type — cast to string with null guard for safety
 - [Phase 05-web-ui]: Done phase renders only Upload another document button — review table not shown read-only
+- [Phase 05-web-ui]: FastAPI routers mounted with prefix='/api' — all API routes under /api/*, health stays at root /health
+- [Phase 05-web-ui]: Vite proxy rewrite lambda removed — /api/* forwarded as-is so dev and production share the same URL scheme
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T03:47:08.443Z
-Stopped at: Completed 05-web-ui-03-PLAN.md
+Last session: 2026-03-24T13:56:24.375Z
+Stopped at: Completed 05-web-ui-04-PLAN.md
 Resume file: None
