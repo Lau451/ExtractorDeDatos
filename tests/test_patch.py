@@ -138,6 +138,64 @@ async def test_patch_409_not_complete(client):
 # ---------------------------------------------------------------------------
 
 
+# ---------------------------------------------------------------------------
+# Regression tests: PATCH on complete job with no extraction_result (UAT gap)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.anyio
+async def test_patch_complete_but_no_extraction(client):
+    """PATCH on a complete job with extraction_result=None must return 409."""
+    job_id = str(uuid.uuid4())
+    job = Job(
+        job_id=job_id,
+        status="complete",
+        doc_type="purchase_order",
+        extraction_result=None,
+    )
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    response = await client.patch(
+        f"/jobs/{job_id}/fields",
+        json={"fields": {"buyer": "NewCorp"}},
+    )
+    assert response.status_code == 409
+    assert response.json()["error"] == "extraction_result_missing"
+
+
+@pytest.mark.anyio
+async def test_patch_extraction_result_returns_none_when_no_extraction():
+    """patch_extraction_result() must return None when extraction_result is None."""
+    job_id = str(uuid.uuid4())
+    job = Job(
+        job_id=job_id,
+        status="complete",
+        doc_type="purchase_order",
+        extraction_result=None,
+    )
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    result = await job_store.patch_extraction_result(job_id, {"buyer": "X"})
+    assert result is None
+
+
+@pytest.mark.anyio
+async def test_set_status_rejects_complete():
+    """set_status() must raise ValueError when called with status='complete'."""
+    job_id = str(uuid.uuid4())
+    await job_store.create(job_id)
+
+    with pytest.raises(ValueError, match="set_extraction_result"):
+        await job_store.set_status(job_id, "complete")
+
+
+# ---------------------------------------------------------------------------
+# End-to-end test: PATCH then export CSV reflects edits (REV-05)
+# ---------------------------------------------------------------------------
+
+
 @pytest.mark.anyio
 async def test_patch_then_export_reflects_edits(client):
     """After PATCH, GET /jobs/{id}/export CSV must contain the corrected value."""
