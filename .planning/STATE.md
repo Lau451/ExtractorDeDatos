@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-web-ui-01-PLAN.md
-last_updated: "2026-03-24T03:36:31.293Z"
+stopped_at: Completed 05-web-ui-02-PLAN.md
+last_updated: "2026-03-24T03:40:00Z"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 05 (web-ui) — EXECUTING
-Plan: 1 of 3
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Plan: 1 of 3
 | Phase 04-full-api-integration P01 | 4 min | 3 tasks | 6 files |
 | Phase 04-full-api-integration P02 | 3 | 2 tasks | 3 files |
 | Phase 05-web-ui P01 | 8 | 2 tasks | 29 files |
+| Phase 05-web-ui P02 | 2 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,9 @@ Recent decisions affecting current work:
 - [Phase 05-web-ui]: Use defineConfig from vitest/config (not vite) to include test config without TypeScript TS2769 error
 - [Phase 05-web-ui]: @ path alias added to tsconfig.app.json + tsconfig.json (root) required by shadcn init validator
 - [Phase 05-web-ui]: LINE_ITEM_KEYS maps doc_type to line items key in extraction_result dict — all three types use line_items
+- [Phase 05-web-ui P02]: 'Try again' button label (not 'Retry Upload') per user decision in plan revision commit 33f4d6d
+- [Phase 05-web-ui P02]: pollingKey increment on retry/reset restarts useJobPoller cleanly without component unmount
+- [Phase 05-web-ui P02]: intervalRef.current stores live interval ID for stale-closure-safe cleanup
 
 ### Pending Todos
 
