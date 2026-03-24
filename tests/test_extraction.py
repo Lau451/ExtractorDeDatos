@@ -52,7 +52,7 @@ async def test_job_has_doc_type_after_classification(client):
 
     # Create a job via upload endpoint
     upload_response = await client.post(
-        "/extract",
+        "/api/extract",
         files={"file": ("test.pdf", b"%PDF-1.4 fake content", "application/pdf")},
     )
     assert upload_response.status_code == 200
@@ -62,7 +62,7 @@ async def test_job_has_doc_type_after_classification(client):
     await job_store.set_doc_type(job_id, "purchase_order")
 
     # GET /jobs/{id} must include doc_type
-    response = await client.get(f"/jobs/{job_id}")
+    response = await client.get(f"/api/jobs/{job_id}")
     assert response.status_code == 200
     body = response.json()
     assert "doc_type" in body

@@ -98,7 +98,7 @@ async def test_patch_updates_field(client):
         job_store._store[job_id] = job
 
     response = await client.patch(
-        f"/jobs/{job_id}/fields",
+        f"/api/jobs/{job_id}/fields",
         json={"fields": {"buyer": "NewCorp"}},
     )
 
@@ -111,7 +111,7 @@ async def test_patch_updates_field(client):
 @pytest.mark.anyio
 async def test_patch_404(client):
     response = await client.patch(
-        "/jobs/nonexistent-id/fields",
+        "/api/jobs/nonexistent-id/fields",
         json={"fields": {"x": "y"}},
     )
     assert response.status_code == 404
@@ -126,7 +126,7 @@ async def test_patch_409_not_complete(client):
         job_store._store[job_id] = job
 
     response = await client.patch(
-        f"/jobs/{job_id}/fields",
+        f"/api/jobs/{job_id}/fields",
         json={"fields": {"x": "y"}},
     )
     assert response.status_code == 409
@@ -157,7 +157,7 @@ async def test_patch_complete_but_no_extraction(client):
         job_store._store[job_id] = job
 
     response = await client.patch(
-        f"/jobs/{job_id}/fields",
+        f"/api/jobs/{job_id}/fields",
         json={"fields": {"buyer": "NewCorp"}},
     )
     assert response.status_code == 409
@@ -224,13 +224,13 @@ async def test_patch_then_export_reflects_edits(client):
 
     # Apply PATCH to update buyer_name
     patch_response = await client.patch(
-        f"/jobs/{job_id}/fields",
+        f"/api/jobs/{job_id}/fields",
         json={"fields": {"buyer_name": "NewCorp"}},
     )
     assert patch_response.status_code == 200
 
     # Export and verify CSV
-    export_response = await client.get(f"/jobs/{job_id}/export")
+    export_response = await client.get(f"/api/jobs/{job_id}/export")
     assert export_response.status_code == 200
 
     csv_text = export_response.content.decode("utf-8-sig")

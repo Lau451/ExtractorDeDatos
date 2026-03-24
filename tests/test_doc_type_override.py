@@ -17,7 +17,7 @@ async def test_override_triggers_reextraction(client):
 
     # Step 1: Create a job and simulate it having completed PO extraction
     upload_response = await client.post(
-        "/extract",
+        "/api/extract",
         files={"file": ("test.pdf", b"%PDF-1.4 fake content", "application/pdf")},
     )
     assert upload_response.status_code == 200
@@ -39,7 +39,7 @@ async def test_override_triggers_reextraction(client):
         "src.api.routes.doc_type.extract_with_type", new_callable=AsyncMock
     ) as mock_extract:
         response = await client.patch(
-            f"/jobs/{job_id}/doc_type",
+            f"/api/jobs/{job_id}/doc_type",
             json={"doc_type": "invoice"},
         )
 
@@ -63,7 +63,7 @@ async def test_override_invalid_doc_type_returns_422(client):
 
     # Create a job
     upload_response = await client.post(
-        "/extract",
+        "/api/extract",
         files={"file": ("test.pdf", b"%PDF-1.4 fake content", "application/pdf")},
     )
     assert upload_response.status_code == 200
@@ -72,7 +72,7 @@ async def test_override_invalid_doc_type_returns_422(client):
 
     # Send an invalid doc_type string — must return 422 Unprocessable Entity
     response = await client.patch(
-        f"/jobs/{job_id}/doc_type",
+        f"/api/jobs/{job_id}/doc_type",
         json={"doc_type": "not_a_valid_type"},
     )
     assert response.status_code == 422
@@ -86,7 +86,7 @@ async def test_override_unknown_not_allowed(client):
 
     # Create a job
     upload_response = await client.post(
-        "/extract",
+        "/api/extract",
         files={"file": ("test.pdf", b"%PDF-1.4 fake content", "application/pdf")},
     )
     assert upload_response.status_code == 200
@@ -96,7 +96,7 @@ async def test_override_unknown_not_allowed(client):
     # 'unknown' is a valid internal classification result but must NOT be accepted
     # via the override endpoint — users must choose a real document type
     response = await client.patch(
-        f"/jobs/{job_id}/doc_type",
+        f"/api/jobs/{job_id}/doc_type",
         json={"doc_type": "unknown"},
     )
     assert response.status_code == 422

@@ -359,7 +359,7 @@ async def test_export_complete_job(client):
     async with job_store._lock:
         job_store._store[job_id] = job
 
-    response = await client.get(f"/jobs/{job_id}/export")
+    response = await client.get(f"/api/jobs/{job_id}/export")
 
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
@@ -370,7 +370,7 @@ async def test_export_complete_job(client):
 
 @pytest.mark.anyio
 async def test_export_404(client):
-    response = await client.get("/jobs/nonexistent-id/export")
+    response = await client.get("/api/jobs/nonexistent-id/export")
 
     assert response.status_code == 404
     assert response.json()["error"] == "job_not_found"
@@ -383,7 +383,7 @@ async def test_export_409_not_complete(client):
     async with job_store._lock:
         job_store._store[job_id] = job
 
-    response = await client.get(f"/jobs/{job_id}/export")
+    response = await client.get(f"/api/jobs/{job_id}/export")
 
     assert response.status_code == 409
     assert response.json()["error"] == "job_not_exportable"
@@ -397,7 +397,7 @@ async def test_export_409_unknown_doc_type(client):
     async with job_store._lock:
         job_store._store[job_id] = job
 
-    response = await client.get(f"/jobs/{job_id}/export")
+    response = await client.get(f"/api/jobs/{job_id}/export")
 
     assert response.status_code == 409
     assert response.json()["error"] == "job_not_exportable"
@@ -411,7 +411,7 @@ async def test_export_content_type(client):
     async with job_store._lock:
         job_store._store[job_id] = job
 
-    response = await client.get(f"/jobs/{job_id}/export")
+    response = await client.get(f"/api/jobs/{job_id}/export")
 
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
 
@@ -423,6 +423,6 @@ async def test_export_filename(client):
     async with job_store._lock:
         job_store._store[job_id] = job
 
-    response = await client.get(f"/jobs/{job_id}/export")
+    response = await client.get(f"/api/jobs/{job_id}/export")
 
     assert f'filename="job_{job_id}_invoice.csv"' in response.headers["content-disposition"]

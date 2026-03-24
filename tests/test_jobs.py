@@ -11,7 +11,7 @@ NON_TERMINAL_STATUSES = {"pending", "processing", "classifying", "extracting"}
 
 async def test_get_nonexistent_job(client):
     """GET /jobs/<unknown-id> returns 404 with error=job_not_found."""
-    response = await client.get("/jobs/nonexistent-id-that-does-not-exist")
+    response = await client.get("/api/jobs/nonexistent-id-that-does-not-exist")
     assert response.status_code == 404
     body = response.json()
     assert body["error"] == "job_not_found"
@@ -21,7 +21,7 @@ async def test_job_lifecycle(client):
     """POST /extract with HTML, poll until complete, assert extraction_result or doc_type present."""
     with open(os.path.join(FIXTURES, "sample.html"), "rb") as f:
         post_response = await client.post(
-            "/extract",
+            "/api/extract",
             files={"file": ("sample.html", f, "text/html")},
         )
     assert post_response.status_code == 200
@@ -31,7 +31,7 @@ async def test_job_lifecycle(client):
     deadline = asyncio.get_event_loop().time() + 60
     job = None
     while asyncio.get_event_loop().time() < deadline:
-        get_response = await client.get(f"/jobs/{job_id}")
+        get_response = await client.get(f"/api/jobs/{job_id}")
         assert get_response.status_code == 200
         job = get_response.json()
         if job["status"] not in NON_TERMINAL_STATUSES:
