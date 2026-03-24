@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-web-ui-04-PLAN.md
-last_updated: "2026-03-24T14:02:24.942Z"
+stopped_at: "Completed 06-02-PLAN.md"
+last_updated: "2026-03-24T18:47:00.000Z"
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 5
-  total_plans: 16
-  completed_plans: 16
+  total_plans: 18
+  completed_plans: 17
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** A procurement analyst can upload any business document and get a structured, editable CSV extract in seconds — without manual data entry.
-**Current focus:** Phase 05 — web-ui
+**Current focus:** Phase 06 — the-tables-of-requests-offers-and-quotations-must-be-extracted-these-tables-contain-the-requested-products-this-information-must-be-extracted-in-addition-purchase-orders-or-order-notes-also-describe-the-awarded-products
 
 ## Current Position
 
-Phase: 05 (web-ui) — EXECUTING
-Plan: 1 of 4
+Phase: 06 (the-tables-of-requests-offers-and-quotations-must-be-extracted-these-tables-contain-the-requested-products-this-information-must-be-extracted-in-addition-purchase-orders-or-order-notes-also-describe-the-awarded-products) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Plan: 1 of 4
 | Phase 05-web-ui P02 | 2 min | 2 tasks | 6 files |
 | Phase 05-web-ui P03 | 4 min | 3 tasks | 8 files |
 | Phase 05-web-ui P04 | 5 min | 2 tasks | 8 files |
+| Phase 06-product-table-extraction P02 | 1 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,11 @@ Recent decisions affecting current work:
 - [Phase 05-web-ui]: Done phase renders only Upload another document button — review table not shown read-only
 - [Phase 05-web-ui]: FastAPI routers mounted with prefix='/api' — all API routes under /api/*, health stays at root /health
 - [Phase 05-web-ui]: Vite proxy rewrite lambda removed — /api/* forwarded as-is so dev and production share the same URL scheme
+- [Phase 06-product-table-extraction P02]: tender_rfq and quotation both map to 'line_items' key — consistent with existing purchase_order/invoice/supplier_comparison pattern, no structural divergence needed
+
+### Roadmap Evolution
+
+- Phase 6 added: The tables of requests, offers, and quotations must be extracted; these tables contain the requested products. This information must be extracted. In addition, purchase orders or order notes also describe the awarded products.
 
 ### Pending Todos
 
@@ -122,6 +128,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T13:56:24.375Z
-Stopped at: Completed 05-web-ui-04-PLAN.md
-Resume file: None
+Last session: 2026-03-24T18:47:00.000Z
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-the-tables-of-requests-offers-and-quotations-must-be-extracted-these-tables-contain-the-requested-products-this-information-must-be-extracted-in-addition-purchase-orders-or-order-notes-also-describe-the-awarded-products/06-02-SUMMARY.md

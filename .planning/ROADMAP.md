@@ -111,7 +111,7 @@ Plans:
   3. CSV export for tender/RFQ produces 11 columns (8 header + 3 line item) in denormalized format
   4. CSV export for quotation produces 15 columns (12 header + 3 line item) in denormalized format
   5. Frontend renders LineItemsTable for tender/RFQ and quotation documents
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 06-01-PLAN.md — Backend schemas (TenderLineItem, QuotationLineItem), CSV formatter switch, test updates
@@ -129,4 +129,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
 | 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
 | 5. Web UI | 3/4 | In Progress | |
-| 6. Product Table Extraction | 0/2 | Planned | |
+| 6. Product Table Extraction | 1/2 | In Progress|  |
