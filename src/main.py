@@ -44,11 +44,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="DocExtract", version="0.1.0", lifespan=lifespan)
 app.include_router(health_router)
-app.include_router(extract_router)
-app.include_router(jobs_router)
-app.include_router(doc_type_router)
-app.include_router(export_router)
-app.include_router(patch_router)
+app.include_router(extract_router, prefix="/api")
+app.include_router(jobs_router, prefix="/api")
+app.include_router(doc_type_router, prefix="/api")
+app.include_router(export_router, prefix="/api")
+app.include_router(patch_router, prefix="/api")
 
 import os
 from fastapi.staticfiles import StaticFiles
