@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: "Completed 06-02-PLAN.md"
-last_updated: "2026-03-24T18:47:00.000Z"
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-24T21:48:26.280Z"
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 18
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -62,6 +62,7 @@ Plan: 2 of 2
 | Phase 05-web-ui P03 | 4 min | 3 tasks | 8 files |
 | Phase 05-web-ui P04 | 5 min | 2 tasks | 8 files |
 | Phase 06-product-table-extraction P02 | 1 min | 2 tasks | 3 files |
+| Phase 06-product-table-extraction P01 | 4 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,8 @@ Recent decisions affecting current work:
 - [Phase 05-web-ui]: FastAPI routers mounted with prefix='/api' — all API routes under /api/*, health stays at root /health
 - [Phase 05-web-ui]: Vite proxy rewrite lambda removed — /api/* forwarded as-is so dev and production share the same URL scheme
 - [Phase 06-product-table-extraction P02]: tender_rfq and quotation both map to 'line_items' key — consistent with existing purchase_order/invoice/supplier_comparison pattern, no structural divergence needed
+- [Phase 06-product-table-extraction]: TenderLineItem and QuotationLineItem use only 3 fields (item_number, quantity, description) — simpler than POLineItem since tenders/quotations lack pricing detail at line level
+- [Phase 06-product-table-extraction]: line_items declared as last field in both result models so CSV column ordering appends line item columns after all header columns
 
 ### Roadmap Evolution
 
@@ -128,6 +131,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T18:47:00.000Z
-Stopped at: Completed 06-02-PLAN.md
-Resume file: .planning/phases/06-the-tables-of-requests-offers-and-quotations-must-be-extracted-these-tables-contain-the-requested-products-this-information-must-be-extracted-in-addition-purchase-orders-or-order-notes-also-describe-the-awarded-products/06-02-SUMMARY.md
+Last session: 2026-03-24T21:48:26.278Z
+Stopped at: Completed 06-01-PLAN.md
+Resume file: None
