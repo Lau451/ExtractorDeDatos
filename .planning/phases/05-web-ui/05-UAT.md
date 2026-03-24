@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 05-web-ui
 source: [05-01-SUMMARY.md, 05-02-SUMMARY.md, 05-03-SUMMARY.md]
 started: 2026-03-24T04:00:00Z
-updated: 2026-03-24T04:03:00Z
+updated: 2026-03-24T00:00:00Z
 ---
 
 ## Current Test
@@ -79,11 +79,17 @@ skipped: 9
 ## Gaps
 
 - truth: "Dropping or selecting a file triggers POST /api/extract and upload proceeds"
-  status: failed
+  status: resolved
   reason: "User reported: When dragging or searching for the file, nothing happens; POST /api/extract HTTP/1.1 405 Method Not Allowed"
   severity: major
   test: 2
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "FastAPI routers are registered without /api prefix (routes live at /extract, /jobs/*, etc.) but frontend always calls /api/extract, /api/jobs/*, etc. In prod mode (FastAPI serving frontend/dist/ static files), Vite proxy is bypassed entirely — requests hit FastAPI directly. The SPA fallback @app.get('/{full_path:path}') absorbs POST /api/extract and returns 405 because it only handles GET."
+  artifacts:
+    - path: "src/main.py"
+      issue: "app.include_router(extract_router) — missing prefix='/api'. Same for jobs_router, doc_type_router, export_router, patch_router."
+    - path: "frontend/vite.config.ts"
+      issue: "Proxy rewrite strips /api prefix (path.replace(/^\\/api/, '')) — compensates in dev but irrelevant in prod; should be removed once routes get /api prefix."
+  missing:
+    - "Add prefix='/api' to all API routers in src/main.py"
+    - "Remove rewrite line from Vite proxy config in frontend/vite.config.ts"
   debug_session: ""
