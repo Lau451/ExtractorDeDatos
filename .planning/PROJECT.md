@@ -27,13 +27,13 @@ A procurement analyst can upload any business document and get a structured, edi
 - [ ] System automatically detects document type on upload (purchase order, tender/RFQ, quotation, invoice, supplier comparison)
 - [ ] User can override the detected document type before extraction
 
-**Field Extraction**
-- [ ] System extracts structured fields from purchase orders using Gemini 2.5 Flash
-- [ ] System extracts structured fields from tenders/RFQs using Gemini 2.5 Flash
-- [ ] System extracts structured fields from quotations using Gemini 2.5 Flash
+**Field Extraction** *(Validated in Phase 6: product-table-extraction)*
+- [x] System extracts structured fields from purchase orders using Gemini 2.5 Flash
+- [x] System extracts structured fields from tenders/RFQs using Gemini 2.5 Flash — includes line items (item_number, quantity, description)
+- [x] System extracts structured fields from quotations using Gemini 2.5 Flash — includes line items (item_number, quantity, description)
 - [ ] System extracts structured fields from invoices using Gemini 2.5 Flash
 - [ ] System extracts structured fields from supplier comparison files using Gemini 2.5 Flash
-- [ ] Each document type has a defined CSV schema with strict column ordering
+- [x] Each document type has a defined CSV schema with strict column ordering
 
 **Review & Correction** *(Validated in Phase 4: full-api-integration)*
 - [x] User can view all extracted fields before downloading the CSV
@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 5 complete — React + Vite + Tailwind + shadcn/ui frontend with full upload→processing→review→done flow. UploadZone, ProgressView, EditableCell, ReviewTable, LineItemsTable, DocTypeBar, CSV download, and FastAPI static serving all implemented. 18/18 frontend tests + 61/61 backend tests passing. All 5 milestones complete — v1.0 milestone done.
+- **Current State:** Phase 6 complete — TenderLineItem and QuotationLineItem submodels added; format_tender_rfq (11-col) and format_quotation (15-col) now produce denormalized line-item CSVs; frontend LINE_ITEM_KEYS and DOC_TYPES_WITH_LINE_ITEMS extended for tender_rfq and quotation. 22/22 frontend tests + 63/63 backend tests passing.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-24 — Phase 5 complete (web-ui). Full React frontend implemented. 18/18 frontend + 61/61 backend tests passing. v1.0 milestone complete.*
+*Last updated: 2026-03-24 — Phase 6 complete (product-table-extraction). Tender/RFQ and Quotation schemas now include line items. 22/22 frontend + 63/63 backend tests passing.*
