@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-24T02:35:57.525Z"
+stopped_at: Completed 05-web-ui-01-PLAN.md
+last_updated: "2026-03-24T03:36:31.293Z"
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** A procurement analyst can upload any business document and get a structured, editable CSV extract in seconds — without manual data entry.
-**Current focus:** Phase 04 — full-api-integration
+**Current focus:** Phase 05 — web-ui
 
 ## Current Position
 
-Phase: 04 (full-api-integration) — EXECUTING
-Plan: 1 of 2
+Phase: 05 (web-ui) — EXECUTING
+Plan: 1 of 3
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 1 of 2
 | Phase 03-csv-export P03 | 5 | 2 tasks | 3 files |
 | Phase 04-full-api-integration P01 | 4 min | 3 tasks | 6 files |
 | Phase 04-full-api-integration P02 | 3 | 2 tasks | 3 files |
+| Phase 05-web-ui P01 | 8 | 2 tasks | 29 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase 04-full-api-integration]: PATCH response reuses _serialize_extraction() from jobs.py for consistent None->Not found serialization
 - [Phase 04-full-api-integration]: Route-level guard for extraction_result=None returns 409 with structured error before calling store — clearer HTTP semantics than relying on store returning None which previously mapped to 404
 - [Phase 04-full-api-integration]: patch_extraction_result() returns None for both missing job and None extraction_result — caller distinguishes via pre-check on job object already fetched
+- [Phase 05-web-ui]: Use defineConfig from vitest/config (not vite) to include test config without TypeScript TS2769 error
+- [Phase 05-web-ui]: @ path alias added to tsconfig.app.json + tsconfig.json (root) required by shadcn init validator
+- [Phase 05-web-ui]: LINE_ITEM_KEYS maps doc_type to line items key in extraction_result dict — all three types use line_items
 
 ### Pending Todos
 
@@ -108,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T02:35:57.523Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-web-ui/05-CONTEXT.md
+Last session: 2026-03-24T03:36:31.291Z
+Stopped at: Completed 05-web-ui-01-PLAN.md
+Resume file: None

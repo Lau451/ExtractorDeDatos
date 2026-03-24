@@ -35,10 +35,10 @@
 
 ### Review & Correction
 
-- [ ] **REV-01**: User can see all extracted fields displayed in a review table before downloading CSV
-- [ ] **REV-02**: User can edit any extracted field value inline in the review table
-- [ ] **REV-03**: Fields that could not be extracted are shown as "Not found" (not blank) in the review table
-- [ ] **REV-04**: User can see extraction progress (spinner with status text) while the document is being processed
+- [x] **REV-01**: User can see all extracted fields displayed in a review table before downloading CSV
+- [x] **REV-02**: User can edit any extracted field value inline in the review table
+- [x] **REV-03**: Fields that could not be extracted are shown as "Not found" (not blank) in the review table
+- [x] **REV-04**: User can see extraction progress (spinner with status text) while the document is being processed
 - [x] **REV-05**: Edited values are reflected in the downloaded CSV (not the originally extracted values)
 
 ### CSV Export
@@ -120,10 +120,10 @@
 | API-04 | Phase 3 | Complete |
 | API-03 | Phase 4 | Complete |
 | REV-05 | Phase 4 | Complete |
-| REV-01 | Phase 5 | Pending |
-| REV-02 | Phase 5 | Pending |
-| REV-03 | Phase 5 | Pending |
-| REV-04 | Phase 5 | Pending |
+| REV-01 | Phase 5 | Complete |
+| REV-02 | Phase 5 | Complete |
+| REV-03 | Phase 5 | Complete |
+| REV-04 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 33 total
