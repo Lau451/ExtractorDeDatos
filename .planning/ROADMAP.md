@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
 - [x] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types (completed 2026-03-23)
 - [x] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export (completed 2026-03-23)
-- [ ] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download
+- [x] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download (completed 2026-03-24)
 
 ## Phase Details
 
@@ -93,7 +93,7 @@ Plans:
   2. User can view all extracted fields in a review table with human-readable labels — fields that could not be extracted show "Not found" rather than blank
   3. User can edit any field value inline in the review table and download a CSV that reflects their edits
   4. User can see the detected document type and override it via a dropdown before extraction results are finalized
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 05-01-PLAN.md — Scaffold Vite + React + Tailwind + shadcn/ui, TypeScript types, API client, utility modules
@@ -111,4 +111,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
 | 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
-| 5. Web UI | 2/3 | In Progress|  |
+| 5. Web UI | 3/3 | Complete   | 2026-03-24 |

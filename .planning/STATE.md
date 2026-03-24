@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-web-ui-02-PLAN.md
-last_updated: "2026-03-24T03:40:00Z"
+stopped_at: Completed 05-web-ui-03-PLAN.md
+last_updated: "2026-03-24T03:47:08.446Z"
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -59,6 +59,7 @@ Plan: 2 of 3
 | Phase 04-full-api-integration P02 | 3 | 2 tasks | 3 files |
 | Phase 05-web-ui P01 | 8 | 2 tasks | 29 files |
 | Phase 05-web-ui P02 | 2 min | 2 tasks | 6 files |
+| Phase 05-web-ui P03 | 4 min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,8 @@ Recent decisions affecting current work:
 - [Phase 05-web-ui P02]: 'Try again' button label (not 'Retry Upload') per user decision in plan revision commit 33f4d6d
 - [Phase 05-web-ui P02]: pollingKey increment on retry/reset restarts useJobPoller cleanly without component unmount
 - [Phase 05-web-ui P02]: intervalRef.current stores live interval ID for stale-closure-safe cleanup
+- [Phase 05-web-ui]: base-ui Select onValueChange passes generic {} type — cast to string with null guard for safety
+- [Phase 05-web-ui]: Done phase renders only Upload another document button — review table not shown read-only
 
 ### Pending Todos
 
@@ -116,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T03:36:31.291Z
-Stopped at: Completed 05-web-ui-01-PLAN.md
+Last session: 2026-03-24T03:47:08.443Z
+Stopped at: Completed 05-web-ui-03-PLAN.md
 Resume file: None
