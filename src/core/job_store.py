@@ -60,6 +60,10 @@ class JobStore:
             return self._store.get(job_id)
 
     async def set_status(self, job_id: str, status: JobStatus) -> None:
+        if status == "complete":
+            raise ValueError(
+                "Cannot set status to 'complete' directly; use set_extraction_result()"
+            )
         async with self._lock:
             if job_id in self._store:
                 self._store[job_id].status = status
@@ -110,7 +114,9 @@ class JobStore:
             job = self._store.get(job_id)
             if job is None:
                 return None
-            current = job.extraction_result or {}
+            if job.extraction_result is None:
+                return None
+            current = job.extraction_result
             job.extraction_result = _deep_merge(current, patch)
             job.updated_at = datetime.utcnow()
             return job

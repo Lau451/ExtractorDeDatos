@@ -32,6 +32,15 @@ async def patch_job_fields(job_id: str, body: PatchFieldsRequest):
             },
         )
 
+    if job.extraction_result is None:
+        return JSONResponse(
+            status_code=409,
+            content={
+                "error": "extraction_result_missing",
+                "message": "Job is complete but has no extraction result to patch",
+            },
+        )
+
     updated_job = await job_store.patch_extraction_result(job_id, body.fields)
     if updated_job is None:
         # Job was removed between get() and patch() — unlikely but safe
