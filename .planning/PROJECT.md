@@ -45,10 +45,10 @@ A procurement analyst can upload any business document and get a structured, edi
 - [x] CSV column order matches the predefined schema for each document type
 - [x] Each document type produces its own CSV structure
 
-**Web UI**
-- [ ] User can upload a file via a web browser interface
-- [ ] User sees extraction progress/status while the document is being processed
-- [ ] User can review, edit, and download the result from the same page
+**Web UI** *(Validated in Phase 5: web-ui)*
+- [x] User can upload a file via a web browser interface
+- [x] User sees extraction progress/status while the document is being processed
+- [x] User can review, edit, and download the result from the same page
 
 **API** *(CSV download validated in Phase 3: csv-export)*
 - [x] REST API exposes upload, status polling, and CSV download endpoints
@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 4 complete — PATCH /jobs/{id}/fields endpoint with deep merge, error code constants, TTL-based job cleanup, and 61/61 tests passing. API-03 (including gap closure: 409 on None extraction_result, set_status invariant) and REV-05 requirements fully satisfied. Phase 5 (web-ui) is next.
+- **Current State:** Phase 5 complete — React + Vite + Tailwind + shadcn/ui frontend with full upload→processing→review→done flow. UploadZone, ProgressView, EditableCell, ReviewTable, LineItemsTable, DocTypeBar, CSV download, and FastAPI static serving all implemented. 18/18 frontend tests + 61/61 backend tests passing. All 5 milestones complete — v1.0 milestone done.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -88,9 +88,9 @@ A procurement analyst can upload any business document and get a structured, edi
 | Docling for document parsing | Structure-aware parsing; handles PDFs, Excel, images better than raw pdfplumber+Tesseract | ✓ Implemented (Phase 1) |
 | Gemini 2.5 Flash as primary LLM | User requirement; good cost/performance ratio for structured extraction tasks | — Pending |
 | Pluggable LLM provider abstraction | Allow swapping Gemini for OpenAI/Claude without rewriting extractors | — Pending |
-| Web UI with inline editing | Users need to review and correct extracted fields before downloading | — Pending |
+| Web UI with inline editing | Users need to review and correct extracted fields before downloading | ✓ Implemented (Phase 5) |
 | In-memory job state for v1 | Avoids database dependency; acceptable for single-user internal tool | ✓ Implemented (Phase 1) |
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-23 — Phase 4 gap closure complete (PATCH None extraction_result guard, set_status invariant, 61/61 tests)*
+*Last updated: 2026-03-24 — Phase 5 complete (web-ui). Full React frontend implemented. 18/18 frontend + 61/61 backend tests passing. v1.0 milestone complete.*
