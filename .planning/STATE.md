@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-03-23T23:34:17.846Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-24T00:10:48.952Z"
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 12
+  completed_plans: 12
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 04 (full-api-integration) — EXECUTING
-Plan: 1 of 1
+Plan: 1 of 2
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Plan: 1 of 1
 | Phase 03-csv-export P02 | 4 | 2 tasks | 3 files |
 | Phase 03-csv-export P03 | 5 | 2 tasks | 3 files |
 | Phase 04-full-api-integration P01 | 4 min | 3 tasks | 6 files |
+| Phase 04-full-api-integration P02 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,8 @@ Recent decisions affecting current work:
 - [Phase 04-full-api-integration]: patch_extraction_result returns Optional[Job] directly to avoid TOCTOU re-fetch after deep merge
 - [Phase 04-full-api-integration]: _deep_merge uses copy.deepcopy — pure function, no mutation of base or patch arguments
 - [Phase 04-full-api-integration]: PATCH response reuses _serialize_extraction() from jobs.py for consistent None->Not found serialization
+- [Phase 04-full-api-integration]: Route-level guard for extraction_result=None returns 409 with structured error before calling store — clearer HTTP semantics than relying on store returning None which previously mapped to 404
+- [Phase 04-full-api-integration]: patch_extraction_result() returns None for both missing job and None extraction_result — caller distinguishes via pre-check on job object already fetched
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T23:29:56.455Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-03-24T00:10:48.950Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
