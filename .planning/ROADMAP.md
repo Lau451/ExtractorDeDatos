@@ -93,12 +93,13 @@ Plans:
   2. User can view all extracted fields in a review table with human-readable labels — fields that could not be extracted show "Not found" rather than blank
   3. User can edit any field value inline in the review table and download a CSV that reflects their edits
   4. User can see the detected document type and override it via a dropdown before extraction results are finalized
-**Plans:** 3/3 plans complete
+**Plans:** 4 plans
 
 Plans:
 - [ ] 05-01-PLAN.md — Scaffold Vite + React + Tailwind + shadcn/ui, TypeScript types, API client, utility modules
 - [ ] 05-02-PLAN.md — Upload zone, progress view with polling, App.tsx state machine
 - [ ] 05-03-PLAN.md — Review table, inline editing, line items table, doc type override, CSV download, production static serving
+- [ ] 05-04-PLAN.md — Gap closure: add /api prefix to FastAPI routers, update test URLs, remove Vite proxy rewrite
 
 ## Progress
 
@@ -111,4 +112,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
 | 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
-| 5. Web UI | 3/3 | Complete   | 2026-03-24 |
+| 5. Web UI | 3/4 | In Progress | |
