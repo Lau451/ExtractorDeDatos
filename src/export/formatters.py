@@ -15,9 +15,9 @@ from typing import Callable
 
 from src.extraction.schemas.invoice import InvoiceLineItem, InvoiceResult
 from src.extraction.schemas.purchase_order import POLineItem, PurchaseOrderResult
-from src.extraction.schemas.quotation import QuotationResult
+from src.extraction.schemas.quotation import QuotationLineItem, QuotationResult
 from src.extraction.schemas.supplier_comparison import SupplierComparisonResult, SupplierRow
-from src.extraction.schemas.tender_rfq import TenderRFQResult
+from src.extraction.schemas.tender_rfq import TenderLineItem, TenderRFQResult
 
 
 # ---------------------------------------------------------------------------
@@ -114,12 +114,12 @@ def format_supplier_comparison(extraction_result: dict) -> bytes:
 
 def format_tender_rfq(extraction_result: dict) -> bytes:
     """Format a TenderRFQ extraction result as CSV bytes."""
-    return _format_header_only_type(TenderRFQResult, extraction_result)
+    return _format_line_item_type(TenderRFQResult, TenderLineItem, extraction_result)
 
 
 def format_quotation(extraction_result: dict) -> bytes:
     """Format a Quotation extraction result as CSV bytes."""
-    return _format_header_only_type(QuotationResult, extraction_result)
+    return _format_line_item_type(QuotationResult, QuotationLineItem, extraction_result)
 
 
 # ---------------------------------------------------------------------------

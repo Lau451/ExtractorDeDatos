@@ -112,6 +112,13 @@ SAMPLE_TENDER = {
     "project_title": "Road Repair",
     "currency": "USD",
     "notes": "Urgent",
+    "line_items": [
+        {
+            "item_number": "1",
+            "quantity": "100",
+            "description": "Asphalt mix",
+        }
+    ],
 }
 
 SAMPLE_QUOTATION = {
@@ -127,6 +134,13 @@ SAMPLE_QUOTATION = {
     "grand_total": "1100.00",
     "payment_terms": "Net 60",
     "delivery_terms": "CIF",
+    "line_items": [
+        {
+            "item_number": "1",
+            "quantity": "50",
+            "description": "Office chairs",
+        }
+    ],
 }
 
 
@@ -235,38 +249,26 @@ def test_column_order_tender_rfq():
     result = format_tender_rfq(SAMPLE_TENDER)
     rows = _parse_csv(result)
     expected = [
-        "tender_reference",
-        "issue_date",
-        "issuing_organization",
-        "submission_deadline",
-        "contact_person",
-        "project_title",
-        "currency",
-        "notes",
+        "tender_reference", "issue_date", "issuing_organization",
+        "submission_deadline", "contact_person", "project_title",
+        "currency", "notes",
+        "item_number", "quantity", "description",
     ]
     assert rows[0] == expected, f"Column order mismatch: {rows[0]}"
-    assert len(rows[0]) == 8
+    assert len(rows[0]) == 11
 
 
 def test_column_order_quotation():
     result = format_quotation(SAMPLE_QUOTATION)
     rows = _parse_csv(result)
     expected = [
-        "quote_number",
-        "quote_date",
-        "vendor_name",
-        "vendor_address",
-        "buyer_name",
-        "valid_until",
-        "currency",
-        "subtotal",
-        "tax_total",
-        "grand_total",
-        "payment_terms",
-        "delivery_terms",
+        "quote_number", "quote_date", "vendor_name", "vendor_address",
+        "buyer_name", "valid_until", "currency", "subtotal", "tax_total",
+        "grand_total", "payment_terms", "delivery_terms",
+        "item_number", "quantity", "description",
     ]
     assert rows[0] == expected, f"Column order mismatch: {rows[0]}"
-    assert len(rows[0]) == 12
+    assert len(rows[0]) == 15
 
 
 def test_distinct_schemas():
@@ -281,8 +283,8 @@ def test_distinct_schemas():
     assert counts["purchase_order"] == 17
     assert counts["invoice"] == 19
     assert counts["supplier_comparison"] == 16
-    assert counts["tender_rfq"] == 8
-    assert counts["quotation"] == 12
+    assert counts["tender_rfq"] == 11
+    assert counts["quotation"] == 15
     assert len(set(counts.values())) == 5, "All five doc types must have distinct column counts"
 
 
@@ -326,11 +328,30 @@ def test_zero_line_items_single_row():
     )
 
 
-def test_header_only_single_row():
-    """TenderRFQ (no line items) must always produce exactly 2 rows (header + 1 data)."""
-    result = format_tender_rfq(SAMPLE_TENDER)
+def test_zero_line_items_produces_single_row_tender():
+    """TenderRFQ with zero line items must produce exactly 2 rows (header + 1 data)."""
+    tender_no_items = {**SAMPLE_TENDER, "line_items": []}
+    result = format_tender_rfq(tender_no_items)
     rows = _parse_csv(result)
     assert len(rows) == 2, f"Expected 2 rows (header + 1 data), got {len(rows)}"
+
+
+def test_tender_line_item_rows():
+    """Tender with 1 line item must produce 2 rows (header + 1 data) with header repeated."""
+    result = format_tender_rfq(SAMPLE_TENDER)
+    rows = _parse_csv(result)
+    assert len(rows) == 2, f"Expected 2 rows, got {len(rows)}"
+    ref_idx = rows[0].index("tender_reference")
+    assert rows[1][ref_idx] == "TND-001"
+
+
+def test_quotation_line_item_rows():
+    """Quotation with 1 line item must produce 2 rows (header + 1 data) with header repeated."""
+    result = format_quotation(SAMPLE_QUOTATION)
+    rows = _parse_csv(result)
+    assert len(rows) == 2, f"Expected 2 rows, got {len(rows)}"
+    num_idx = rows[0].index("quote_number")
+    assert rows[1][num_idx] == "QT-001"
 
 
 def test_formatter_registry_has_all_types():
