@@ -78,10 +78,11 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can PATCH corrected field values to a job and the subsequent CSV download contains the corrected values, not the originally extracted values
   2. Failed jobs expose a human-readable error state (Docling timeout, Gemini error, invalid file) rather than a 500 response
-**Plans:** 1/1 plans complete
+**Plans:** 2 plans (1 complete, 1 gap closure)
 
 Plans:
-- [ ] 04-01-PLAN.md — PATCH endpoint with deep merge, error code constants, TTL cleanup, full test suite
+- [x] 04-01-PLAN.md — PATCH endpoint with deep merge, error code constants, TTL cleanup, full test suite
+- [ ] 04-02-PLAN.md — Gap closure: fix PATCH silently accepting None extraction_result
 
 ### Phase 5: Web UI
 **Goal**: React SPA that exposes the complete single-file extraction workflow — upload zone, live progress indicator, inline-editable review table, document type display with override dropdown, and CSV download trigger
@@ -104,5 +105,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
 | 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
-| 4. Full API Integration | 1/1 | Complete   | 2026-03-23 |
+| 4. Full API Integration | 1/2 | In Progress | - |
 | 5. Web UI | 0/TBD | Not started | - |
