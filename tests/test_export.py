@@ -15,6 +15,11 @@ from src.export.formatters import (
     format_quotation,
     format_supplier_comparison,
     format_tender_rfq,
+    normalize_cell,
+    check_mandatory_fields,
+    MANDATORY_FIELDS,
+    _is_amount_field,
+    _is_date_field,
 )
 
 # ---------------------------------------------------------------------------
@@ -288,15 +293,14 @@ def test_distinct_schemas():
     assert len(set(counts.values())) == 5, "All five doc types must have distinct column counts"
 
 
-def test_none_values_are_empty_cells():
-    """None fields in extraction_result must render as '' not 'None'."""
+def test_none_values_are_not_found():
+    """None fields in extraction_result must render as 'Not found'."""
     result = format_purchase_order(SAMPLE_PO)
     rows = _parse_csv(result)
-    # SAMPLE_PO has notes=None; notes is column index 9 (0-based)
     notes_col_idx = rows[0].index("notes")
     for data_row in rows[1:]:
-        assert data_row[notes_col_idx] != "None", (
-            f"notes column should be empty string, got 'None' in row: {data_row}"
+        assert data_row[notes_col_idx] == "Not found", (
+            f"notes column should be 'Not found', got '{data_row[notes_col_idx]}'"
         )
 
 
@@ -323,8 +327,8 @@ def test_zero_line_items_single_row():
     # Line-item columns should be empty
     header = rows[0]
     item_number_idx = header.index("item_number")
-    assert rows[1][item_number_idx] == "", (
-        f"item_number should be empty for zero-line-item doc, got: {rows[1][item_number_idx]}"
+    assert rows[1][item_number_idx] == "Not found", (
+        f"item_number should be 'Not found' for zero-line-item doc, got: {rows[1][item_number_idx]}"
     )
 
 
@@ -363,6 +367,108 @@ def test_formatter_registry_has_all_types():
         f"SCHEMA_REGISTRY keys {set(SCHEMA_REGISTRY.keys())}"
     )
     assert len(FORMATTER_REGISTRY) == 5
+
+
+# ---------------------------------------------------------------------------
+# Unit tests for normalize_cell
+# ---------------------------------------------------------------------------
+
+
+def test_normalize_cell_none_returns_not_found():
+    assert normalize_cell("any_field", None) == "Not found"
+
+
+def test_normalize_cell_empty_string_returns_not_found():
+    assert normalize_cell("any_field", "") == "Not found"
+    assert normalize_cell("any_field", "   ") == "Not found"
+
+
+def test_normalize_amount_fields():
+    assert normalize_cell("total_amount", "$1,234.50") == "1234.50"
+    assert normalize_cell("unit_price", "EUR 50.00") == "50.00"
+    assert normalize_cell("extended_price", "1500") == "1500"
+    assert normalize_cell("subtotal", "100.00") == "100.00"
+    assert normalize_cell("tax_total", "150.00") == "150.00"
+
+
+def test_normalize_amount_fallback():
+    assert normalize_cell("total_amount", "N/A") == "N/A"
+    assert normalize_cell("unit_price", "TBD") == "TBD"
+
+
+def test_normalize_date_fields():
+    assert normalize_cell("issue_date", "2024-01-15") == "15/01/2024"
+    assert normalize_cell("quote_date", "January 15, 2024") == "15/01/2024"
+    assert normalize_cell("invoice_date", "15/01/2024") == "15/01/2024"
+    assert normalize_cell("due_date", "2024/01/15") == "15/01/2024"
+
+
+def test_normalize_date_fallback():
+    assert normalize_cell("issue_date", "unparseable") == "unparseable"
+
+
+def test_normalize_text_whitespace():
+    assert normalize_cell("buyer_name", "  Acme  Corp  ") == "Acme Corp"
+    assert normalize_cell("notes", "hello   world") == "hello world"
+
+
+def test_submission_deadline_not_date_normalized():
+    """submission_deadline does not match date pattern — text normalization only."""
+    assert normalize_cell("submission_deadline", "2024-02-05") == "2024-02-05"
+
+
+def test_valid_until_not_date_normalized():
+    """valid_until does not match date pattern — text normalization only."""
+    assert normalize_cell("valid_until", "2024-02-12") == "2024-02-12"
+
+
+def test_is_amount_field():
+    assert _is_amount_field("total_amount") is True
+    assert _is_amount_field("unit_price") is True
+    assert _is_amount_field("extended_price") is True
+    assert _is_amount_field("subtotal") is True
+    assert _is_amount_field("tax_total") is True
+    assert _is_amount_field("po_number") is False
+    assert _is_amount_field("buyer_name") is False
+
+
+def test_is_date_field():
+    assert _is_date_field("issue_date") is True
+    assert _is_date_field("quote_date") is True
+    assert _is_date_field("invoice_date") is True
+    assert _is_date_field("due_date") is True
+    assert _is_date_field("submission_deadline") is False
+    assert _is_date_field("valid_until") is False
+
+
+def test_check_mandatory_fields_missing():
+    data = {"po_number": None, "issue_date": "2024-01-15", "buyer_name": "Acme", "supplier_name": "Widget"}
+    result = check_mandatory_fields("purchase_order", data)
+    assert result == ["po_number"]
+
+
+def test_check_mandatory_fields_all_present():
+    data = {"po_number": "PO-001", "issue_date": "2024-01-15", "buyer_name": "Acme", "supplier_name": "Widget"}
+    result = check_mandatory_fields("purchase_order", data)
+    assert result == []
+
+
+def test_check_mandatory_fields_empty_string():
+    data = {"po_number": "  ", "issue_date": "2024-01-15", "buyer_name": "Acme", "supplier_name": "Widget"}
+    result = check_mandatory_fields("purchase_order", data)
+    assert result == ["po_number"]
+
+
+def test_formatter_normalization_applied():
+    """PO formatter must apply normalization — amount fields stripped, None becomes 'Not found'."""
+    po = {**SAMPLE_PO, "total_amount": "$1,500.00", "notes": None}
+    result = format_purchase_order(po)
+    rows = _parse_csv(result)
+    header = rows[0]
+    total_idx = header.index("total_amount")
+    notes_idx = header.index("notes")
+    assert rows[1][total_idx] == "1500.00"
+    assert rows[1][notes_idx] == "Not found"
 
 
 # ---------------------------------------------------------------------------

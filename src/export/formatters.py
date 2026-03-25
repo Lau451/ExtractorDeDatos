@@ -11,6 +11,8 @@ single data row.
 """
 import csv
 import io
+import re
+from datetime import datetime
 from typing import Callable
 
 from src.extraction.schemas.invoice import InvoiceLineItem, InvoiceResult
@@ -18,6 +20,92 @@ from src.extraction.schemas.purchase_order import POLineItem, PurchaseOrderResul
 from src.extraction.schemas.quotation import QuotationLineItem, QuotationResult
 from src.extraction.schemas.supplier_comparison import SupplierComparisonResult, SupplierRow
 from src.extraction.schemas.tender_rfq import TenderLineItem, TenderRFQResult
+
+
+# ---------------------------------------------------------------------------
+# Value normalization
+# ---------------------------------------------------------------------------
+
+_AMOUNT_KEYWORDS = ("amount", "price", "total", "subtotal", "tax")
+_DATE_KEYWORDS = ("date",)
+_DATE_SUFFIXES = ("_at",)
+
+
+def _is_amount_field(name: str) -> bool:
+    return any(kw in name for kw in _AMOUNT_KEYWORDS)
+
+
+def _is_date_field(name: str) -> bool:
+    return any(kw in name for kw in _DATE_KEYWORDS) or any(
+        name.endswith(s) for s in _DATE_SUFFIXES
+    )
+
+
+_DATE_FORMATS = [
+    "%d/%m/%Y", "%d-%m-%Y",
+    "%Y-%m-%d", "%Y/%m/%d",
+    "%d %B %Y", "%d %b %Y",
+    "%B %d, %Y", "%b %d, %Y",
+    "%m/%d/%Y",
+]
+
+
+def _normalize_amount(value: str) -> str:
+    cleaned = re.sub(r"[^\d.,-]", "", value).replace(",", "")
+    try:
+        float(cleaned)
+        return cleaned
+    except ValueError:
+        return value
+
+
+def _normalize_date(value: str) -> str:
+    for fmt in _DATE_FORMATS:
+        try:
+            return datetime.strptime(value.strip(), fmt).strftime("%d/%m/%Y")
+        except ValueError:
+            continue
+    return value
+
+
+def _normalize_text(value: str) -> str:
+    return re.sub(r" +", " ", value.strip())
+
+
+def normalize_cell(field_name: str, value) -> str:
+    if value is None:
+        return "Not found"
+    s = str(value)
+    if not s.strip():
+        return "Not found"
+    if _is_amount_field(field_name):
+        return _normalize_amount(s)
+    if _is_date_field(field_name):
+        return _normalize_date(s)
+    return _normalize_text(s)
+
+
+# ---------------------------------------------------------------------------
+# Mandatory field enforcement
+# ---------------------------------------------------------------------------
+
+MANDATORY_FIELDS: dict[str, list[str]] = {
+    "purchase_order": ["po_number", "issue_date", "buyer_name", "supplier_name"],
+    "tender_rfq": ["tender_reference", "issue_date", "issuing_organization"],
+    "quotation": ["quote_number", "quote_date", "vendor_name"],
+    "invoice": ["invoice_number", "invoice_date", "issuer_name"],
+    "supplier_comparison": ["project_name", "comparison_date", "rfq_reference"],
+}
+
+
+def check_mandatory_fields(doc_type: str, extraction_result: dict) -> list[str]:
+    required = MANDATORY_FIELDS.get(doc_type, [])
+    missing = []
+    for field in required:
+        val = extraction_result.get(field)
+        if val is None or (isinstance(val, str) and not val.strip()):
+            missing.append(field)
+    return missing
 
 
 # ---------------------------------------------------------------------------
@@ -72,9 +160,9 @@ def _format_line_item_type(model_class, item_model_class, extraction_result: dic
             for item in result.line_items
         ]
 
-    # Replace None with "" in every cell
+    all_fields = header_fields + item_fields
     clean_rows = [
-        [("" if v is None else v) for v in row]
+        [normalize_cell(all_fields[i], v) for i, v in enumerate(row)]
         for row in raw_rows
     ]
 
@@ -88,7 +176,7 @@ def _format_header_only_type(model_class, extraction_result: dict) -> bytes:
     """
     result = model_class.model_validate(extraction_result)
     fields = list(model_class.model_fields.keys())
-    row = [("" if getattr(result, f) is None else getattr(result, f)) for f in fields]
+    row = [normalize_cell(f, getattr(result, f)) for f in fields]
     return _make_csv_bytes(fields, [row])
 
 
