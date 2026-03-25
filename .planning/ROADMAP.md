@@ -140,3 +140,20 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 Plans:
 - [x] TBD (run /gsd:plan-phase 7 to break down) (completed 2026-03-25)
+
+### Phase 8: The only information we need from the offers or quotes is the order table: line, quantity (whole number), and description. Ignore everything else.
+
+**Goal:** Narrow tender/RFQ and quotation document types to line items only -- strip all header fields from schemas, produce 3-column CSV (item_number, quantity, description), add quantity normalization, and hide ReviewTable in frontend for these types
+**Requirements**: P8-SCHEMA-01, P8-CSV-01, P8-NORM-01, P8-FE-01
+**Depends on:** Phase 7
+**Success Criteria** (what must be TRUE):
+  1. Tender/RFQ and quotation CSVs produce exactly 3 columns: item_number, quantity, description
+  2. Quantity values are normalized: unit suffixes stripped ("5 kg" -> "5"), trailing .0 stripped ("3.00" -> "3"), non-integer floats preserved ("3.5" -> "3.5")
+  3. Zero line items produces one data row with "Not found" in all 3 cells
+  4. Frontend hides ReviewTable (header fields section) for tender_rfq and quotation doc types
+  5. All other doc types (purchase_order, invoice, supplier_comparison) are completely unchanged
+**Plans:** 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Backend: strip schemas, rewrite formatters, add quantity normalization, update tests
+- [ ] 08-02-PLAN.md — Frontend: hide ReviewTable for tender_rfq and quotation doc types
