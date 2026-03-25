@@ -1,7 +1,8 @@
 ---
 phase: 8
 slug: offers-quotes-line-items-only
-status: draft
+status: approved
+reviewed_at: 2026-03-25
 shadcn_initialized: true
 preset: base-nova / neutral
 created: 2026-03-25
