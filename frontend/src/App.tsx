@@ -9,7 +9,7 @@ import { DocTypeBar } from '@/components/DocTypeBar';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import { useJobPoller } from '@/hooks/useJobPoller';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, Loader2, AlertTriangle } from 'lucide-react';
 import { LINE_ITEM_KEYS } from '@/lib/fieldLabels';
 import { DOC_TYPES_WITH_LINE_ITEMS } from '@/lib/docTypes';
 
@@ -28,6 +28,8 @@ function App() {
   } | null>(null);
   const [pollingKey, setPollingKey] = useState(0);
   const [jobData, setJobData] = useState<JobResponse | null>(null);
+  const [exportWarnings, setExportWarnings] = useState<string[] | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Sync jobData when phase changes to review
   useEffect(() => {
@@ -78,6 +80,7 @@ function App() {
     setPollingError(null);
     setPollingKey((k) => k + 1);
     setJobData(null);
+    setExportWarnings(null);
   };
 
   const handleDocTypeOverride = async (newType: string) => {
@@ -103,9 +106,33 @@ function App() {
     setJobData(updated);
   };
 
-  const handleDownloadCSV = (currentJobId: string, currentJobData: JobResponse) => {
-    window.open(api.exportUrl(currentJobId), '_blank');
-    setPhase({ tag: 'done', jobId: currentJobId, jobData: currentJobData });
+  const handleDownloadCSV = async (currentJobId: string, currentJobData: JobResponse) => {
+    setExportWarnings(null);
+    setIsDownloading(true);
+    try {
+      const res = await api.exportCSV(currentJobId);
+      const warnings = res.headers.get('X-Export-Warnings');
+      if (warnings) {
+        setExportWarnings(warnings.split(',').map(w => w.trim()));
+      }
+      // Programmatic download
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const disposition = res.headers.get('Content-Disposition');
+      const filenameMatch = disposition?.match(/filename="(.+)"/);
+      a.href = url;
+      a.download = filenameMatch ? filenameMatch[1] : `export_${currentJobId}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (!warnings) {
+        setPhase({ tag: 'done', jobId: currentJobId, jobData: currentJobData });
+      }
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const currentStatus = pollingError ? 'error' : (pollingStatus ?? 'pending');
@@ -154,24 +181,51 @@ function App() {
             <div className="mt-6">
               <Button
                 variant="default"
-                onClick={() => handleDownloadCSV(phase.jobId, jobData)}
+                onClick={() => { void handleDownloadCSV(phase.jobId, jobData); }}
+                disabled={isDownloading}
               >
-                <Download className="mr-2 h-4 w-4" />
-                Download CSV
+                {isDownloading ? (
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                ) : (
+                  <Download className="mr-2 h-4 w-4" />
+                )}
+                {isDownloading ? 'Downloading...' : 'Download CSV'}
               </Button>
             </div>
+            {exportWarnings && exportWarnings.length > 0 && (
+              <div role="alert" className="rounded-lg border border-amber-200 bg-amber-50 p-4 mt-4">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-4 w-4 text-amber-600 mr-2 flex-shrink-0" />
+                  <p className="text-sm font-semibold text-amber-800">Some fields could not be verified</p>
+                </div>
+                <p className="text-sm text-amber-700 mt-1">Missing: {exportWarnings.join(', ')}</p>
+                <p className="text-sm text-amber-700 mt-1">The CSV was downloaded. Review these fields before using the file.</p>
+              </div>
+            )}
           </div>
         )}
 
         {phase.tag === 'done' && (
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              className="border-primary text-primary"
-              onClick={handleReset}
-            >
-              Upload another document
-            </Button>
+          <div>
+            {exportWarnings && exportWarnings.length > 0 && (
+              <div role="alert" className="rounded-lg border border-amber-200 bg-amber-50 p-4 mb-4">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-4 w-4 text-amber-600 mr-2 flex-shrink-0" />
+                  <p className="text-sm font-semibold text-amber-800">Some fields could not be verified</p>
+                </div>
+                <p className="text-sm text-amber-700 mt-1">Missing: {exportWarnings.join(', ')}</p>
+                <p className="text-sm text-amber-700 mt-1">The CSV was downloaded. Review these fields before using the file.</p>
+              </div>
+            )}
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="border-primary text-primary"
+                onClick={handleReset}
+              >
+                Upload another document
+              </Button>
+            </div>
           </div>
         )}
       </div>

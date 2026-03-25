@@ -43,6 +43,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="DocExtract", version="0.1.0", lifespan=lifespan)
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Export-Warnings"],
+)
+
 app.include_router(health_router)
 app.include_router(extract_router, prefix="/api")
 app.include_router(jobs_router, prefix="/api")

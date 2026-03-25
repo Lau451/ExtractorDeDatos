@@ -45,4 +45,12 @@ export const api = {
   exportUrl(jobId: string): string {
     return `/api/jobs/${jobId}/export`;
   },
+
+  async exportCSV(jobId: string): Promise<Response> {
+    const res = await fetch(`/api/jobs/${jobId}/export`);
+    if (!res.ok) {
+      throw new Error('Export failed');
+    }
+    return res;
+  },
 };
