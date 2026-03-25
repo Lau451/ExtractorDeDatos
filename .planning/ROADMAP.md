@@ -130,3 +130,13 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
 | 5. Web UI | 3/4 | In Progress | |
 | 6. Product Table Extraction | 2/2 | Complete   | 2026-03-24 |
+
+### Phase 7: CSV export rules enforcement
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 6
+**Plans:** 1/2 plans executed
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 7 to break down)
