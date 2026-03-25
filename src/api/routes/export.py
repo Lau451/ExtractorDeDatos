@@ -1,7 +1,9 @@
+from datetime import date
+
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, Response
 from src.core.job_store import job_store
-from src.export.formatters import FORMATTER_REGISTRY
+from src.export.formatters import FORMATTER_REGISTRY, check_mandatory_fields
 
 router = APIRouter()
 
@@ -39,10 +41,21 @@ async def export_job(job_id: str):
 
     formatter = FORMATTER_REGISTRY[job.doc_type]
     csv_bytes = formatter(job.extraction_result)
-    filename = f"job_{job_id}_{job.doc_type}.csv"
+
+    # Descriptive filename: {doc_type}_{YYYY-MM-DD}.csv
+    today = date.today().strftime("%Y-%m-%d")
+    filename = f"{job.doc_type}_{today}.csv"
+
+    # Check mandatory fields against raw extraction_result
+    warnings = check_mandatory_fields(job.doc_type, job.extraction_result)
+    response_headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"',
+    }
+    if warnings:
+        response_headers["X-Export-Warnings"] = ",".join(warnings)
 
     return Response(
         content=csv_bytes,
         media_type="text/csv; charset=utf-8",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers=response_headers,
     )

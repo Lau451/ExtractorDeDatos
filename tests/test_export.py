@@ -476,6 +476,7 @@ def test_formatter_normalization_applied():
 # ---------------------------------------------------------------------------
 
 import pytest
+from datetime import date
 from src.core.job_store import Job, job_store
 
 
@@ -491,7 +492,8 @@ async def test_export_complete_job(client):
     assert response.status_code == 200
     assert response.headers["content-type"] == "text/csv; charset=utf-8"
     assert "attachment" in response.headers["content-disposition"]
-    assert f"job_{job_id}_purchase_order.csv" in response.headers["content-disposition"]
+    today = date.today().strftime("%Y-%m-%d")
+    assert f'filename="purchase_order_{today}.csv"' in response.headers["content-disposition"]
     assert response.content.startswith(b"\xef\xbb\xbf")
 
 
@@ -552,4 +554,63 @@ async def test_export_filename(client):
 
     response = await client.get(f"/api/jobs/{job_id}/export")
 
-    assert f'filename="job_{job_id}_invoice.csv"' in response.headers["content-disposition"]
+    today = date.today().strftime("%Y-%m-%d")
+    assert f'filename="invoice_{today}.csv"' in response.headers["content-disposition"]
+
+
+@pytest.mark.anyio
+async def test_export_filename_convention(client):
+    """Filename must be {doc_type}_{YYYY-MM-DD}.csv."""
+    job_id = "test-filename-convention"
+    job = Job(job_id=job_id, status="complete", doc_type="tender_rfq", extraction_result=SAMPLE_TENDER)
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    response = await client.get(f"/api/jobs/{job_id}/export")
+    today = date.today().strftime("%Y-%m-%d")
+    assert f'filename="tender_rfq_{today}.csv"' in response.headers["content-disposition"]
+
+
+@pytest.mark.anyio
+async def test_export_warnings_header(client):
+    """X-Export-Warnings must list missing mandatory fields."""
+    po_missing = {**SAMPLE_PO, "po_number": None, "issue_date": None}
+    job_id = "test-warnings-header"
+    job = Job(job_id=job_id, status="complete", doc_type="purchase_order", extraction_result=po_missing)
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    response = await client.get(f"/api/jobs/{job_id}/export")
+    assert response.status_code == 200
+    warnings_header = response.headers.get("x-export-warnings")
+    assert warnings_header is not None
+    warnings_list = [w.strip() for w in warnings_header.split(",")]
+    assert "po_number" in warnings_list
+    assert "issue_date" in warnings_list
+
+
+@pytest.mark.anyio
+async def test_export_warnings_still_200(client):
+    """Export must return HTTP 200 even with missing mandatory fields."""
+    po_missing = {**SAMPLE_PO, "po_number": None}
+    job_id = "test-warnings-200"
+    job = Job(job_id=job_id, status="complete", doc_type="purchase_order", extraction_result=po_missing)
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    response = await client.get(f"/api/jobs/{job_id}/export")
+    assert response.status_code == 200
+    assert response.content.startswith(b"\xef\xbb\xbf")
+
+
+@pytest.mark.anyio
+async def test_export_no_warnings_when_complete(client):
+    """No X-Export-Warnings header when all mandatory fields are present."""
+    job_id = "test-no-warnings"
+    job = Job(job_id=job_id, status="complete", doc_type="purchase_order", extraction_result=SAMPLE_PO)
+    async with job_store._lock:
+        job_store._store[job_id] = job
+
+    response = await client.get(f"/api/jobs/{job_id}/export")
+    assert response.status_code == 200
+    assert "x-export-warnings" not in response.headers
