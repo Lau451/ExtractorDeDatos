@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 07-csv-export-rules-enforcement-01-PLAN.md
-last_updated: "2026-03-25T02:26:33.842Z"
+stopped_at: Awaiting human-verify checkpoint for 07-csv-export-rules-enforcement-02
+last_updated: "2026-03-25T02:30:43.178Z"
 progress:
   total_phases: 7
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 20
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -64,6 +64,7 @@ Plan: 1 of 2
 | Phase 06-product-table-extraction P02 | 1 min | 2 tasks | 3 files |
 | Phase 06-product-table-extraction P01 | 4 | 2 tasks | 4 files |
 | Phase 07-csv-export-rules-enforcement P01 | 8 min | 2 tasks | 3 files |
+| Phase 07-csv-export-rules-enforcement P02 | 2 min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -119,6 +120,9 @@ Recent decisions affecting current work:
 - [Phase 07-csv-export-rules-enforcement]: normalize_cell uses keyword substring matching on field names (_is_amount_field/_is_date_field) — no explicit whitelist, covers current and future fields
 - [Phase 07-csv-export-rules-enforcement]: X-Export-Warnings header absent (not empty string) when no mandatory fields missing — cleaner contract; HTTP 200 always returned even when mandatory fields missing
 - [Phase 07-csv-export-rules-enforcement]: submission_deadline and valid_until intentionally not date-normalized — lack 'date' substring in field name; unparseable amounts/dates kept unchanged to avoid data loss
+- [Phase 07-csv-export-rules-enforcement]: CORSMiddleware added with expose_headers=[X-Export-Warnings] so browser CORS policy does not strip the custom header
+- [Phase 07-csv-export-rules-enforcement]: exportCSV returns raw Response (not parsed JSON/blob) so caller can read headers before consuming body
+- [Phase 07-csv-export-rules-enforcement]: Phase transitions to done only when no warnings; when warnings exist, phase stays in review with banner visible
 
 ### Roadmap Evolution
 
@@ -136,6 +140,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T02:26:33.839Z
-Stopped at: Completed 07-csv-export-rules-enforcement-01-PLAN.md
+Last session: 2026-03-25T02:30:43.175Z
+Stopped at: Awaiting human-verify checkpoint for 07-csv-export-rules-enforcement-02
 Resume file: None
