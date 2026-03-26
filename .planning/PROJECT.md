@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 6 complete — TenderLineItem and QuotationLineItem submodels added; format_tender_rfq (11-col) and format_quotation (15-col) now produce denormalized line-item CSVs; frontend LINE_ITEM_KEYS and DOC_TYPES_WITH_LINE_ITEMS extended for tender_rfq and quotation. 22/22 frontend tests + 63/63 backend tests passing.
+- **Current State:** Phase 8 complete — TenderRFQResult and QuotationResult stripped to line_items only (3-column CSV: item_number, quantity, description). Quantity normalization strips unit suffixes and trailing zeroes. ReviewTable hidden in frontend for tender_rfq and quotation. 32/32 frontend tests + 92/92 backend tests passing.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-24 — Phase 6 complete (product-table-extraction). Tender/RFQ and Quotation schemas now include line items. 22/22 frontend + 63/63 backend tests passing.*
+*Last updated: 2026-03-25 — Phase 8 complete (line-items-only for offers/quotes). Tender/RFQ and Quotation schemas stripped to line_items only; 3-column CSV output; quantity normalization; ReviewTable hidden in frontend for these types. 32/32 frontend + 92/92 backend tests passing.*
