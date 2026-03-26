@@ -65,7 +65,7 @@ A procurement analyst can upload any business document and get a structured, edi
 
 ## Context
 
-- **Current State:** Phase 8 complete — TenderRFQResult and QuotationResult stripped to line_items only (3-column CSV: item_number, quantity, description). Quantity normalization strips unit suffixes and trailing zeroes. ReviewTable hidden in frontend for tender_rfq and quotation. 32/32 frontend tests + 92/92 backend tests passing.
+- **Current State:** Phase 8 complete — TenderRFQResult and QuotationResult stripped to line_items only (3-column CSV: item_number, quantity, description). Quantity normalization strips unit suffixes, trailing zeroes, and period-as-thousands-separator (e.g., '1.000' → '1000'). ReviewTable hidden in frontend for tender_rfq and quotation. 32/32 frontend tests + 93/93 backend tests passing.
 - **Codebase:** Phase 1 implemented. `src/` contains core, api, and ingestion layers. Tests in `tests/`.
 - **Docling:** User-specified library for document parsing and structure extraction. Replaces raw pdfplumber/Tesseract approach documented in codebase map.
 - **LLM:** Gemini 2.5 Flash via `google-generativeai` SDK. Provider abstraction should allow future swapping.
@@ -93,4 +93,4 @@ A procurement analyst can upload any business document and get a structured, edi
 | One document type per file | Simplifies routing and schema selection; user confirmed documents are not mixed | — Pending |
 
 ---
-*Last updated: 2026-03-25 — Phase 8 complete (line-items-only for offers/quotes). Tender/RFQ and Quotation schemas stripped to line_items only; 3-column CSV output; quantity normalization; ReviewTable hidden in frontend for these types. 32/32 frontend + 92/92 backend tests passing.*
+*Last updated: 2026-03-26 — Phase 8 gap closure complete. Fixed normalize_quantity to distinguish period-as-thousands-separator from decimal point ('1.000' → '1000', '1.000.000' → '1000000'). 32/32 frontend + 93/93 backend tests passing.*
