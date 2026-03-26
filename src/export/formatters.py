@@ -78,10 +78,16 @@ def _normalize_text(value: str) -> str:
 
 
 def normalize_quantity(value: str) -> str:
-    m = re.match(r"^(\d+(?:\.\d+)?)", value.strip())
-    if not m:
+    stripped = value.strip()
+    # Try thousands-separator pattern first: 1-3 digits followed by one or more .NNN groups
+    m_thousands = re.match(r"^(\d{1,3}(?:\.\d{3})+)", stripped)
+    if m_thousands:
+        return m_thousands.group(1).replace(".", "")
+    # Standard numeric: integer or decimal
+    m_std = re.match(r"^(\d+(?:\.\d+)?)", stripped)
+    if not m_std:
         return value
-    numeric_part = m.group(1)
+    numeric_part = m_std.group(1)
     try:
         as_float = float(numeric_part)
         if as_float == int(as_float):
