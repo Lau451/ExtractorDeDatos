@@ -592,7 +592,14 @@ def test_normalize_quantity_strips_unit_suffix():
 def test_normalize_quantity_strips_trailing_zero():
     assert normalize_cell("quantity", "3.00") == "3"
     assert normalize_cell("quantity", "5.0") == "5"
-    assert normalize_cell("quantity", "100.000") == "100"
+    assert normalize_cell("quantity", "100.000") == "100000"
+
+
+def test_normalize_quantity_thousands_separator():
+    assert normalize_cell("quantity", "1.000") == "1000"
+    assert normalize_cell("quantity", "1.000 pcs") == "1000"
+    assert normalize_cell("quantity", "1.000.000") == "1000000"
+    assert normalize_cell("quantity", "10.000") == "10000"
 
 
 def test_normalize_quantity_preserves_non_integer_float():
