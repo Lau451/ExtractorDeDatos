@@ -152,7 +152,7 @@ Plans:
   3. Zero line items produces one data row with "Not found" in all 3 cells
   4. Frontend hides ReviewTable (header fields section) for tender_rfq and quotation doc types
   5. All other doc types (purchase_order, invoice, supplier_comparison) are completely unchanged
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 08-01-PLAN.md — Backend: strip schemas, rewrite formatters, add quantity normalization, update tests

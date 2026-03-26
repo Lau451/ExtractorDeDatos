@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-25T22:44:05.676Z"
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-26T00:10:24.476Z"
 progress:
   total_phases: 8
   completed_phases: 7
-  total_plans: 20
-  completed_plans: 20
+  total_plans: 22
+  completed_plans: 21
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** A procurement analyst can upload any business document and get a structured, editable CSV extract in seconds — without manual data entry.
-**Current focus:** Phase 07 — csv-export-rules-enforcement
+**Current focus:** Phase 08 — the-only-information-we-need-from-the-offers-or-quotes-is-the-order-table-line-quantity-whole-number-and-description-ignore-everything-else
 
 ## Current Position
 
-Phase: 07 (csv-export-rules-enforcement) — EXECUTING
+Phase: 08 (the-only-information-we-need-from-the-offers-or-quotes-is-the-order-table-line-quantity-whole-number-and-description-ignore-everything-else) — EXECUTING
 Plan: 1 of 2
 
 ## Performance Metrics
@@ -65,6 +65,7 @@ Plan: 1 of 2
 | Phase 06-product-table-extraction P01 | 4 | 2 tasks | 4 files |
 | Phase 07-csv-export-rules-enforcement P01 | 8 min | 2 tasks | 3 files |
 | Phase 07-csv-export-rules-enforcement P02 | 2 min | 1 tasks | 3 files |
+| Phase 08-offers-quotes-line-items-only P02 | 2 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,8 @@ Recent decisions affecting current work:
 - [Phase 07-csv-export-rules-enforcement]: CORSMiddleware added with expose_headers=[X-Export-Warnings] so browser CORS policy does not strip the custom header
 - [Phase 07-csv-export-rules-enforcement]: exportCSV returns raw Response (not parsed JSON/blob) so caller can read headers before consuming body
 - [Phase 07-csv-export-rules-enforcement]: Phase transitions to done only when no warnings; when warnings exist, phase stays in review with banner visible
+- [Phase 08]: LINE_ITEMS_ONLY_DOC_TYPES as a Set<string> in docTypes.ts — single source of truth for which doc types skip header fields UI
+- [Phase 08]: Structural vitest assertions read App.tsx source text to verify guard placement — catches guard omission/inversion that tsc alone cannot detect
 
 ### Roadmap Evolution
 
@@ -141,6 +144,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T22:44:05.673Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-the-only-information-we-need-from-the-offers-or-quotes-is-the-order-table-line-quantity-whole-number-and-description-ignore-everything-else/08-CONTEXT.md
+Last session: 2026-03-26T00:10:24.474Z
+Stopped at: Completed 08-02-PLAN.md
+Resume file: None
