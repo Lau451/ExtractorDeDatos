@@ -1,9 +1,9 @@
 ---
-status: complete
+status: resolved
 phase: 08-offers-quotes-line-items-only
 source: [08-01-SUMMARY.md, 08-02-SUMMARY.md]
 started: 2026-03-26T00:00:00Z
-updated: 2026-03-26T00:00:00Z
+updated: 2026-03-26T12:00:00Z
 ---
 
 ## Current Test
@@ -56,16 +56,31 @@ skipped: 0
 ## Gaps
 
 - truth: "Quantity with unit suffix should be stripped to numeric part only, correctly handling both thousands separators and decimal points"
-  status: failed
+  status: resolved
   reason: "User reported: It works, but it doesn't distinguish between the thousands separator and the decimal point."
   severity: major
   test: 3
-  artifacts: []
-  missing: []
+  root_cause: "normalize_quantity (formatters.py:81-88) uses float() to parse the numeric part. float('1.000') == 1.0 in Python, so period-as-thousands-separator is silently misread as decimal. The function then strips it to '1' instead of '1000'."
+  artifacts:
+    - path: "src/export/formatters.py"
+      issue: "Line 81: regex r'^(\\d+(?:\\.\\d+)?)' captures '1.000' as a decimal float token. Lines 86-88: float('1.000') == 1.0 == int(1.0), so returns '1' instead of '1000'."
+    - path: "tests/test_export.py"
+      issue: "Line 595: test asserts normalize_cell('quantity', '100.000') == '100', enshrining the bug as expected behavior."
+  missing:
+    - "Check if fractional part is exactly 3 digits before treating as decimal (3-digit fractional = thousands separator convention)"
+    - "Only collapse to int when decimal part is confirmed trailing zeros (1-2 digit zeros)"
+    - "Add tests for period-as-thousands-separator: '1.000' → '1000', '1.000 pcs' → '1000'"
+    - "Fix existing wrong assertion: test_normalize_quantity_strips_trailing_zero line 595"
 - truth: "Trailing .0 removal should correctly identify whole-number floats vs. numbers using period as thousands separator"
-  status: failed
+  status: resolved
   reason: "User reported: It does not distinguish when there are thousands of decimal points."
   severity: major
   test: 4
-  artifacts: []
-  missing: []
+  root_cause: "Same root cause as test 3 — float() parsing in normalize_quantity treats '1.000' as 1.0 (decimal) rather than 1000 (thousands separator). Both issues stem from the same lines in formatters.py:81-88."
+  artifacts:
+    - path: "src/export/formatters.py"
+      issue: "Lines 81-88: float-based normalization is locale-unaware; cannot distinguish '1.000' (thousands) from '1.0' (decimal)."
+    - path: "tests/test_export.py"
+      issue: "No test cases cover period-as-thousands-separator pattern for the .0 stripping path."
+  missing:
+    - "Same fix as test 3 — distinguish 3-digit fractional groups (thousands) from 1-2 digit zeros (true decimals) before collapsing"
