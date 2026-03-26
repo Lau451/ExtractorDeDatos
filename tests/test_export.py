@@ -20,6 +20,7 @@ from src.export.formatters import (
     MANDATORY_FIELDS,
     _is_amount_field,
     _is_date_field,
+    _is_quantity_field,
 )
 
 # ---------------------------------------------------------------------------
@@ -614,3 +615,77 @@ async def test_export_no_warnings_when_complete(client):
     response = await client.get(f"/api/jobs/{job_id}/export")
     assert response.status_code == 200
     assert "x-export-warnings" not in response.headers
+
+
+# ---------------------------------------------------------------------------
+# Quantity normalization tests (RED: will fail until implementation)
+# ---------------------------------------------------------------------------
+
+
+def test_normalize_quantity_strips_unit_suffix():
+    assert normalize_cell("quantity", "5 kg") == "5"
+    assert normalize_cell("quantity", "10 pcs") == "10"
+    assert normalize_cell("quantity", "3 boxes") == "3"
+
+
+def test_normalize_quantity_strips_trailing_zero():
+    assert normalize_cell("quantity", "3.00") == "3"
+    assert normalize_cell("quantity", "5.0") == "5"
+    assert normalize_cell("quantity", "100.000") == "100"
+
+
+def test_normalize_quantity_preserves_non_integer_float():
+    assert normalize_cell("quantity", "3.5") == "3.5"
+    assert normalize_cell("quantity", "2.75") == "2.75"
+
+
+def test_normalize_quantity_preserves_unparseable():
+    assert normalize_cell("quantity", "N/A") == "N/A"
+    assert normalize_cell("quantity", "TBD") == "TBD"
+
+
+def test_normalize_quantity_none_is_not_found():
+    assert normalize_cell("quantity", None) == "Not found"
+
+
+def test_is_quantity_field():
+    assert _is_quantity_field("quantity") is True
+    assert _is_quantity_field("unit_price") is False
+    assert _is_quantity_field("quantity_unit") is False
+
+
+def test_column_order_tender_rfq_3cols():
+    result = format_tender_rfq(SAMPLE_TENDER)
+    rows = _parse_csv(result)
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert len(rows[0]) == 3
+
+
+def test_column_order_quotation_3cols():
+    result = format_quotation(SAMPLE_QUOTATION)
+    rows = _parse_csv(result)
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert len(rows[0]) == 3
+
+
+def test_zero_line_items_produces_single_row_tender():
+    tender_no_items = {"line_items": []}
+    result = format_tender_rfq(tender_no_items)
+    rows = _parse_csv(result)
+    assert len(rows) == 2
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert rows[1] == ["Not found", "Not found", "Not found"]
+
+
+def test_zero_line_items_produces_single_row_quotation():
+    quotation_no_items = {"line_items": []}
+    result = format_quotation(quotation_no_items)
+    rows = _parse_csv(result)
+    assert len(rows) == 2
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert rows[1] == ["Not found", "Not found", "Not found"]
+
+
+def test_mandatory_fields_tender_quotation_empty():
+    assert MANDATORY_FIELDS["tender_rfq"] == []
+    assert MANDATORY_FIELDS["quotation"] == []
