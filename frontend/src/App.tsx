@@ -11,7 +11,7 @@ import { useJobPoller } from '@/hooks/useJobPoller';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2, AlertTriangle } from 'lucide-react';
 import { LINE_ITEM_KEYS } from '@/lib/fieldLabels';
-import { DOC_TYPES_WITH_LINE_ITEMS } from '@/lib/docTypes';
+import { DOC_TYPES_WITH_LINE_ITEMS, LINE_ITEMS_ONLY_DOC_TYPES } from '@/lib/docTypes';
 
 type Phase =
   | { tag: 'upload' }
@@ -164,11 +164,13 @@ function App() {
               docType={jobData.doc_type ?? 'unknown'}
               onOverride={handleDocTypeOverride}
             />
-            <ReviewTable
-              data={jobData.extraction_result ?? {}}
-              lineItemKey={LINE_ITEM_KEYS[jobData.doc_type ?? ''] ?? null}
-              onFieldSave={handleFieldSave}
-            />
+            {!LINE_ITEMS_ONLY_DOC_TYPES.has(jobData.doc_type ?? '') && (
+              <ReviewTable
+                data={jobData.extraction_result ?? {}}
+                lineItemKey={LINE_ITEM_KEYS[jobData.doc_type ?? ''] ?? null}
+                onFieldSave={handleFieldSave}
+              />
+            )}
             {DOC_TYPES_WITH_LINE_ITEMS.has(jobData.doc_type ?? '') &&
               Array.isArray((jobData.extraction_result ?? {})['line_items']) &&
               ((jobData.extraction_result ?? {})['line_items'] as unknown[]).length > 0 && (

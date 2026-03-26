@@ -6,6 +6,8 @@ export const DOC_TYPES_WITH_LINE_ITEMS = new Set([
   'quotation',
 ]);
 
+export const LINE_ITEMS_ONLY_DOC_TYPES = new Set(['tender_rfq', 'quotation']);
+
 export const VALID_DOC_TYPES = [
   'purchase_order',
   'tender_rfq',
