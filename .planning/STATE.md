@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-26T00:10:24.476Z"
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-26T00:15:31.488Z"
 progress:
   total_phases: 8
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 22
-  completed_plans: 21
+  completed_plans: 22
 ---
 
 # Project State
@@ -66,6 +66,7 @@ Plan: 1 of 2
 | Phase 07-csv-export-rules-enforcement P01 | 8 min | 2 tasks | 3 files |
 | Phase 07-csv-export-rules-enforcement P02 | 2 min | 1 tasks | 3 files |
 | Phase 08-offers-quotes-line-items-only P02 | 2 min | 2 tasks | 3 files |
+| Phase 08 P01 | 6 min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -126,6 +127,9 @@ Recent decisions affecting current work:
 - [Phase 07-csv-export-rules-enforcement]: Phase transitions to done only when no warnings; when warnings exist, phase stays in review with banner visible
 - [Phase 08]: LINE_ITEMS_ONLY_DOC_TYPES as a Set<string> in docTypes.ts — single source of truth for which doc types skip header fields UI
 - [Phase 08]: Structural vitest assertions read App.tsx source text to verify guard placement — catches guard omission/inversion that tsc alone cannot detect
+- [Phase 08]: TenderRFQResult and QuotationResult stripped to line_items only — header fields discarded at schema level, not at formatter level
+- [Phase 08]: normalize_quantity uses exact field-name match via _QUANTITY_FIELD_NAMES tuple — prevents substring false matches on fields like quantity_unit
+- [Phase 08]: MANDATORY_FIELDS for tender_rfq and quotation set to [] — no header fields to enforce after schema stripping
 
 ### Roadmap Evolution
 
@@ -144,6 +148,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T00:10:24.474Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-26T00:15:31.486Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
