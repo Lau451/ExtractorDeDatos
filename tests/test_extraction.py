@@ -150,17 +150,17 @@ async def test_po_extraction_line_items():
 
 
 async def test_tender_extraction():
-    """EXT-02: Tender/RFQ extraction returns expected header fields."""
-    from src.extraction.schemas.tender_rfq import TenderRFQResult
+    """EXT-02: Tender/RFQ extraction returns line_items only (header fields stripped)."""
+    from src.extraction.schemas.tender_rfq import TenderLineItem, TenderRFQResult
 
     mock_result = TenderRFQResult(
-        tender_reference="RFQ-2024-0312",
-        issue_date="2024-02-28",
-        issuing_organization="Metro City Public Works Department",
-        submission_deadline="2024-03-28 17:00 EST",
-        contact_person="Maria Rodriguez",
-        project_title="Downtown Water Main Replacement Phase III",
-        currency="USD",
+        line_items=[
+            TenderLineItem(
+                item_number="1",
+                quantity="500",
+                description="DN300 ductile iron pipe",
+            )
+        ]
     )
 
     with patch("src.llm.gemini.GeminiProvider") as MockProvider:
@@ -169,32 +169,28 @@ async def test_tender_extraction():
 
         result = await provider.extract(load_fixture("sample_tender.md"), TenderRFQResult)
 
-        assert result.tender_reference == "RFQ-2024-0312"
-        assert result.issuing_organization == "Metro City Public Works Department"
-        assert result.submission_deadline is not None
-        assert result.project_title is not None
+        assert isinstance(result.line_items, list)
+        assert len(result.line_items) >= 1
+        first_item = result.line_items[0]
+        assert first_item.description is not None
+        assert first_item.quantity is not None
 
 
 # ---- Quotation extraction (EXT-03) ----
 
 
 async def test_quotation_extraction():
-    """EXT-03: Quotation extraction returns expected fields."""
-    from src.extraction.schemas.quotation import QuotationResult
+    """EXT-03: Quotation extraction returns line_items only (header fields stripped)."""
+    from src.extraction.schemas.quotation import QuotationLineItem, QuotationResult
 
     mock_result = QuotationResult(
-        quote_number="QT-2024-0198",
-        quote_date="2024-03-05",
-        vendor_name="Premium Pipe Solutions Inc.",
-        vendor_address="789 Pipeline Road, Houston, TX 77001",
-        buyer_name="Metro City Public Works Department",
-        valid_until="2024-04-05",
-        currency="USD",
-        subtotal="$384,000.00",
-        tax_total="$27,840.00",
-        grand_total="$411,840.00",
-        payment_terms="50% on order, 50% on completion",
-        delivery_terms="FOB Destination, 45 days ARO",
+        line_items=[
+            QuotationLineItem(
+                item_number="1",
+                quantity="50",
+                description="Ductile iron gate valve DN200",
+            )
+        ]
     )
 
     with patch("src.llm.gemini.GeminiProvider") as MockProvider:
@@ -203,10 +199,11 @@ async def test_quotation_extraction():
 
         result = await provider.extract(load_fixture("sample_quotation.md"), QuotationResult)
 
-        assert result.quote_number == "QT-2024-0198"
-        assert result.vendor_name == "Premium Pipe Solutions Inc."
-        assert result.grand_total == "$411,840.00"
-        assert result.valid_until == "2024-04-05"
+        assert isinstance(result.line_items, list)
+        assert len(result.line_items) >= 1
+        first_item = result.line_items[0]
+        assert first_item.description is not None
+        assert first_item.quantity is not None
 
 
 # ---- Invoice extraction (EXT-04, EXT-07) ----

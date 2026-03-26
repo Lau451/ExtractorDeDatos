@@ -110,14 +110,6 @@ SAMPLE_SUPPLIER = {
 }
 
 SAMPLE_TENDER = {
-    "tender_reference": "TND-001",
-    "issue_date": "2024-01-05",
-    "issuing_organization": "Gov Agency",
-    "submission_deadline": "2024-02-05",
-    "contact_person": "John Doe",
-    "project_title": "Road Repair",
-    "currency": "USD",
-    "notes": "Urgent",
     "line_items": [
         {
             "item_number": "1",
@@ -128,18 +120,6 @@ SAMPLE_TENDER = {
 }
 
 SAMPLE_QUOTATION = {
-    "quote_number": "QT-001",
-    "quote_date": "2024-01-12",
-    "vendor_name": "Supplier X",
-    "vendor_address": "789 Pine Rd",
-    "buyer_name": "Acme Corp",
-    "valid_until": "2024-02-12",
-    "currency": "EUR",
-    "subtotal": "1000.00",
-    "tax_total": "100.00",
-    "grand_total": "1100.00",
-    "payment_terms": "Net 60",
-    "delivery_terms": "CIF",
     "line_items": [
         {
             "item_number": "1",
@@ -254,31 +234,19 @@ def test_column_order_supplier_comparison():
 def test_column_order_tender_rfq():
     result = format_tender_rfq(SAMPLE_TENDER)
     rows = _parse_csv(result)
-    expected = [
-        "tender_reference", "issue_date", "issuing_organization",
-        "submission_deadline", "contact_person", "project_title",
-        "currency", "notes",
-        "item_number", "quantity", "description",
-    ]
-    assert rows[0] == expected, f"Column order mismatch: {rows[0]}"
-    assert len(rows[0]) == 11
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert len(rows[0]) == 3
 
 
 def test_column_order_quotation():
     result = format_quotation(SAMPLE_QUOTATION)
     rows = _parse_csv(result)
-    expected = [
-        "quote_number", "quote_date", "vendor_name", "vendor_address",
-        "buyer_name", "valid_until", "currency", "subtotal", "tax_total",
-        "grand_total", "payment_terms", "delivery_terms",
-        "item_number", "quantity", "description",
-    ]
-    assert rows[0] == expected, f"Column order mismatch: {rows[0]}"
-    assert len(rows[0]) == 15
+    assert rows[0] == ["item_number", "quantity", "description"]
+    assert len(rows[0]) == 3
 
 
 def test_distinct_schemas():
-    """All five formatters must produce different column counts."""
+    """All five formatters must produce the expected column counts."""
     counts = {
         "purchase_order": len(_parse_csv(format_purchase_order(SAMPLE_PO))[0]),
         "invoice": len(_parse_csv(format_invoice(SAMPLE_INVOICE))[0]),
@@ -289,9 +257,8 @@ def test_distinct_schemas():
     assert counts["purchase_order"] == 17
     assert counts["invoice"] == 19
     assert counts["supplier_comparison"] == 16
-    assert counts["tender_rfq"] == 11
-    assert counts["quotation"] == 15
-    assert len(set(counts.values())) == 5, "All five doc types must have distinct column counts"
+    assert counts["tender_rfq"] == 3
+    assert counts["quotation"] == 3
 
 
 def test_none_values_are_not_found():
@@ -333,30 +300,24 @@ def test_zero_line_items_single_row():
     )
 
 
-def test_zero_line_items_produces_single_row_tender():
-    """TenderRFQ with zero line items must produce exactly 2 rows (header + 1 data)."""
-    tender_no_items = {**SAMPLE_TENDER, "line_items": []}
-    result = format_tender_rfq(tender_no_items)
-    rows = _parse_csv(result)
-    assert len(rows) == 2, f"Expected 2 rows (header + 1 data), got {len(rows)}"
-
-
 def test_tender_line_item_rows():
-    """Tender with 1 line item must produce 2 rows (header + 1 data) with header repeated."""
+    """Tender with 1 line item must produce 2 rows (header + 1 data) with 3-column layout."""
     result = format_tender_rfq(SAMPLE_TENDER)
     rows = _parse_csv(result)
     assert len(rows) == 2, f"Expected 2 rows, got {len(rows)}"
-    ref_idx = rows[0].index("tender_reference")
-    assert rows[1][ref_idx] == "TND-001"
+    assert rows[1][0] == "1"            # item_number
+    assert rows[1][1] == "100"          # quantity
+    assert rows[1][2] == "Asphalt mix"  # description
 
 
 def test_quotation_line_item_rows():
-    """Quotation with 1 line item must produce 2 rows (header + 1 data) with header repeated."""
+    """Quotation with 1 line item must produce 2 rows (header + 1 data) with 3-column layout."""
     result = format_quotation(SAMPLE_QUOTATION)
     rows = _parse_csv(result)
     assert len(rows) == 2, f"Expected 2 rows, got {len(rows)}"
-    num_idx = rows[0].index("quote_number")
-    assert rows[1][num_idx] == "QT-001"
+    assert rows[1][0] == "1"              # item_number
+    assert rows[1][1] == "50"            # quantity
+    assert rows[1][2] == "Office chairs"  # description
 
 
 def test_formatter_registry_has_all_types():
