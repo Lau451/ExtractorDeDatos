@@ -13,18 +13,17 @@ DocExtract is built in five natural delivery phases, each completing a coherent 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Running FastAPI server with safe multi-format file ingestion and async job infrastructure (completed 2026-03-19)
-- [ ] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
-- [x] **Phase 3: CSV Export** - Schema-correct, Excel-compatible CSV generation for all document types (completed 2026-03-23)
-- [x] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export (completed 2026-03-23)
-- [x] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download (completed 2026-03-24)
+- [] **Phase 2: Extraction Pipeline** - Document classification and structured field extraction for all five document types via Gemini 2.5 Flash
+- [ ] **Phase 3: CSV Export** - mSchea-correct, Excel-compatible CSV generation for all document types
+- [ ] **Phase 4: Full API Integration** - Complete REST endpoint surface with user-edit merge into export
+- [ ] **Phase 5: Web UI** - React SPA with upload, status polling, inline-edit review table, and CSV download
 
 ## Phase Details
 
 ### Phase 1: Foundation
 **Goal**: A running FastAPI server that accepts any supported file format, safely ingests it via Docling with OCR and timeout protection, stores the job in a race-condition-safe in-memory store, and exposes upload and status endpoints
 **Depends on**: Nothing (first phase)
-**Requirements**: ING-01, ING-02, ING-03, ING-04, ING-05, ING-06, API-01, API-02, API-05
-**Success Criteria** (what must be TRUE):
+da**Success Criteria** (what must be TRUE):
   1. User can POST a PDF, XLSX, PNG/JPG, or HTML file to /extract and immediately receive a job ID
   2. User can GET /jobs/{id} and see the job progress from pending through processing to complete
   3. Scanned PDFs and image files produce non-empty normalized text (OCR is active, not silently skipped)
@@ -64,12 +63,7 @@ Plans:
   2. The downloaded CSV opens in Excel without garbled characters
   3. CSV column order matches the predefined schema for the document type — no extra or reordered columns
   4. Each of the five document types produces its own distinct CSV structure (purchase order, tender/RFQ, quotation, invoice, supplier comparison)
-**Plans:** 3/3 plans complete
-
-Plans:
-- [x] 03-01-PLAN.md — CSV formatters for all 5 doc types with FORMATTER_REGISTRY and unit tests
-- [x] 03-02-PLAN.md — GET /jobs/{id}/export endpoint with 409 gate and integration tests
-- [ ] 03-03-PLAN.md — Gap closure: fix status collision — set_complete called before extraction pipeline
+**Plans**: TBD
 
 ### Phase 4: Full API Integration
 **Goal**: Complete REST API surface — PATCH endpoint for user-corrected field values merges edits into the extraction result so the exported CSV reflects corrections, plus TTL-based job cleanup and structured error states
@@ -78,11 +72,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can PATCH corrected field values to a job and the subsequent CSV download contains the corrected values, not the originally extracted values
   2. Failed jobs expose a human-readable error state (Docling timeout, Gemini error, invalid file) rather than a 500 response
-**Plans:** 2/2 plans complete
-
-Plans:
-- [x] 04-01-PLAN.md — PATCH endpoint with deep merge, error code constants, TTL cleanup, full test suite
-- [ ] 04-02-PLAN.md — Gap closure: fix PATCH silently accepting None extraction_result
+**Plans**: TBD
 
 ### Phase 5: Web UI
 **Goal**: React SPA that exposes the complete single-file extraction workflow — upload zone, live progress indicator, inline-editable review table, document type display with override dropdown, and CSV download trigger
@@ -93,67 +83,17 @@ Plans:
   2. User can view all extracted fields in a review table with human-readable labels — fields that could not be extracted show "Not found" rather than blank
   3. User can edit any field value inline in the review table and download a CSV that reflects their edits
   4. User can see the detected document type and override it via a dropdown before extraction results are finalized
-**Plans:** 4 plans
-
-Plans:
-- [ ] 05-01-PLAN.md — Scaffold Vite + React + Tailwind + shadcn/ui, TypeScript types, API client, utility modules
-- [ ] 05-02-PLAN.md — Upload zone, progress view with polling, App.tsx state machine
-- [ ] 05-03-PLAN.md — Review table, inline editing, line items table, doc type override, CSV download, production static serving
-- [ ] 05-04-PLAN.md — Gap closure: add /api prefix to FastAPI routers, update test URLs, remove Vite proxy rewrite
-
-### Phase 6: Product Table Extraction
-**Goal**: Add product line item extraction to Tender/RFQ and Quotation document types — retrofit line_items tables into Pydantic schemas, CSV formatters, and frontend review table so all five doc types have full line-item support
-**Depends on:** Phase 5
-**Requirements**: P6-SCHEMA-01, P6-SCHEMA-02, P6-CSV-01, P6-CSV-02, P6-FE-01, P6-FE-02, P6-TEST-01
-**Success Criteria** (what must be TRUE):
-  1. Tender/RFQ extraction results include line_items with item_number, quantity, and description fields
-  2. Quotation extraction results include line_items with item_number, quantity, and description fields
-  3. CSV export for tender/RFQ produces 11 columns (8 header + 3 line item) in denormalized format
-  4. CSV export for quotation produces 15 columns (12 header + 3 line item) in denormalized format
-  5. Frontend renders LineItemsTable for tender/RFQ and quotation documents
-**Plans:** 2/2 plans complete
-
-Plans:
-- [ ] 06-01-PLAN.md — Backend schemas (TenderLineItem, QuotationLineItem), CSV formatter switch, test updates
-- [ ] 06-02-PLAN.md — Frontend constants (LINE_ITEM_KEYS, DOC_TYPES_WITH_LINE_ITEMS) for tender/quotation
+**Plans**: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-19 |
 | 2. Extraction Pipeline | 3/4 | In Progress|  |
-| 3. CSV Export | 3/3 | Complete   | 2026-03-23 |
-| 4. Full API Integration | 2/2 | Complete   | 2026-03-24 |
-| 5. Web UI | 3/4 | In Progress | |
-| 6. Product Table Extraction | 2/2 | Complete   | 2026-03-24 |
-
-### Phase 7: CSV export rules enforcement
-
-**Goal:** [To be planned]
-**Requirements**: TBD
-**Depends on:** Phase 6
-**Plans:** 2/2 plans complete
-
-Plans:
-- [x] TBD (run /gsd:plan-phase 7 to break down) (completed 2026-03-25)
-
-### Phase 8: The only information we need from the offers or quotes is the order table: line, quantity (whole number), and description. Ignore everything else.
-
-**Goal:** Narrow tender/RFQ and quotation document types to line items only -- strip all header fields from schemas, produce 3-column CSV (item_number, quantity, description), add quantity normalization, and hide ReviewTable in frontend for these types
-**Requirements**: P8-SCHEMA-01, P8-CSV-01, P8-NORM-01, P8-FE-01
-**Depends on:** Phase 7
-**Success Criteria** (what must be TRUE):
-  1. Tender/RFQ and quotation CSVs produce exactly 3 columns: item_number, quantity, description
-  2. Quantity values are normalized: unit suffixes stripped ("5 kg" -> "5"), trailing .0 stripped ("3.00" -> "3"), non-integer floats preserved ("3.5" -> "3.5")
-  3. Zero line items produces one data row with "Not found" in all 3 cells
-  4. Frontend hides ReviewTable (header fields section) for tender_rfq and quotation doc types
-  5. All other doc types (purchase_order, invoice, supplier_comparison) are completely unchanged
-**Plans:** 2/2 plans complete
-
-Plans:
-- [ ] 08-01-PLAN.md — Backend: strip schemas, rewrite formatters, add quantity normalization, update tests
-- [ ] 08-02-PLAN.md — Frontend: hide ReviewTable for tender_rfq and quotation doc types
+| 3. CSV Export | 0/TBD | Not started | - |
+| 4. Full API Integration | 0/TBD | Not started | - |
+| 5. Web UI | 0/TBD | Not started | - |
