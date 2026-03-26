@@ -17,9 +17,9 @@ from typing import Callable
 
 from src.extraction.schemas.invoice import InvoiceLineItem, InvoiceResult
 from src.extraction.schemas.purchase_order import POLineItem, PurchaseOrderResult
-from src.extraction.schemas.quotation import QuotationLineItem, QuotationResult
+from src.extraction.schemas.quotation import QuotationLineItem
 from src.extraction.schemas.supplier_comparison import SupplierComparisonResult, SupplierRow
-from src.extraction.schemas.tender_rfq import TenderLineItem, TenderRFQResult
+from src.extraction.schemas.tender_rfq import TenderLineItem
 
 
 # ---------------------------------------------------------------------------
@@ -29,6 +29,7 @@ from src.extraction.schemas.tender_rfq import TenderLineItem, TenderRFQResult
 _AMOUNT_KEYWORDS = ("amount", "price", "total", "subtotal", "tax")
 _DATE_KEYWORDS = ("date",)
 _DATE_SUFFIXES = ("_at",)
+_QUANTITY_FIELD_NAMES = ("quantity",)
 
 
 def _is_amount_field(name: str) -> bool:
@@ -39,6 +40,10 @@ def _is_date_field(name: str) -> bool:
     return any(kw in name for kw in _DATE_KEYWORDS) or any(
         name.endswith(s) for s in _DATE_SUFFIXES
     )
+
+
+def _is_quantity_field(name: str) -> bool:
+    return name in _QUANTITY_FIELD_NAMES
 
 
 _DATE_FORMATS = [
@@ -72,6 +77,20 @@ def _normalize_text(value: str) -> str:
     return re.sub(r" +", " ", value.strip())
 
 
+def normalize_quantity(value: str) -> str:
+    m = re.match(r"^(\d+(?:\.\d+)?)", value.strip())
+    if not m:
+        return value
+    numeric_part = m.group(1)
+    try:
+        as_float = float(numeric_part)
+        if as_float == int(as_float):
+            return str(int(as_float))
+        return numeric_part
+    except ValueError:
+        return value
+
+
 def normalize_cell(field_name: str, value) -> str:
     if value is None:
         return "Not found"
@@ -82,6 +101,8 @@ def normalize_cell(field_name: str, value) -> str:
         return _normalize_amount(s)
     if _is_date_field(field_name):
         return _normalize_date(s)
+    if _is_quantity_field(field_name):
+        return normalize_quantity(s)
     return _normalize_text(s)
 
 
@@ -91,8 +112,8 @@ def normalize_cell(field_name: str, value) -> str:
 
 MANDATORY_FIELDS: dict[str, list[str]] = {
     "purchase_order": ["po_number", "issue_date", "buyer_name", "supplier_name"],
-    "tender_rfq": ["tender_reference", "issue_date", "issuing_organization"],
-    "quotation": ["quote_number", "quote_date", "vendor_name"],
+    "tender_rfq": [],
+    "quotation": [],
     "invoice": ["invoice_number", "invoice_date", "issuer_name"],
     "supplier_comparison": ["project_name", "comparison_date", "rfq_reference"],
 }
@@ -180,6 +201,25 @@ def _format_header_only_type(model_class, extraction_result: dict) -> bytes:
     return _make_csv_bytes(fields, [row])
 
 
+def _format_line_items_only(item_model_class, extraction_result: dict) -> bytes:
+    """Format a document type that only exposes its line_items list (no header fields).
+
+    One CSV row is emitted per line item. If the document contains zero line
+    items, a single data row is emitted with 'Not found' in all cells.
+    """
+    item_fields = list(item_model_class.model_fields.keys())
+    raw_line_items = extraction_result.get("line_items") or []
+    if not raw_line_items:
+        rows = [[normalize_cell(f, None) for f in item_fields]]
+    else:
+        rows = [
+            [normalize_cell(item_fields[i], item.get(item_fields[i]))
+             for i in range(len(item_fields))]
+            for item in raw_line_items
+        ]
+    return _make_csv_bytes(item_fields, rows)
+
+
 # ---------------------------------------------------------------------------
 # Public formatter functions
 # ---------------------------------------------------------------------------
@@ -201,13 +241,13 @@ def format_supplier_comparison(extraction_result: dict) -> bytes:
 
 
 def format_tender_rfq(extraction_result: dict) -> bytes:
-    """Format a TenderRFQ extraction result as CSV bytes."""
-    return _format_line_item_type(TenderRFQResult, TenderLineItem, extraction_result)
+    """Format a TenderRFQ extraction result as CSV bytes -- 3 columns only."""
+    return _format_line_items_only(TenderLineItem, extraction_result)
 
 
 def format_quotation(extraction_result: dict) -> bytes:
-    """Format a Quotation extraction result as CSV bytes."""
-    return _format_line_item_type(QuotationResult, QuotationLineItem, extraction_result)
+    """Format a Quotation extraction result as CSV bytes -- 3 columns only."""
+    return _format_line_items_only(QuotationLineItem, extraction_result)
 
 
 # ---------------------------------------------------------------------------
